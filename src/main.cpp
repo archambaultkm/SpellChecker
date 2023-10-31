@@ -5,16 +5,29 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
 
-    BST<int> bst;
+    BST<std::string> bst;
 
-    bst.insert(5);
-    bst.insert(3);
-    bst.insert(7);
-    bst.insert(2);
-    bst.insert(4);
-    bst.insert(6);
-    bst.insert(8);
-    bst.insert(9);
+    bst.insert("c");
+    bst.insert("a");
+    bst.insert("b");
+    bst.insert("d");
+    bst.insert("e");
+    bst.insert("ab");
+
+    cout << "original tree: " << endl;
+
+    cout << bst << endl;
+
+    bst.remove("b");
+
+    cout << "after removing b" << endl;
+
+    cout << bst << endl;
+
+    bst.insert("z");
+    bst.insert("*");
+
+    cout << "adding z and *" << endl;
 
     cout << bst << endl;
 
