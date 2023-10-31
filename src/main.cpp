@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
 
     string dictionary_path;
     string sample_text_path;
-    string balanced_tree_output_path; // todo ask if you even need this
+    string balanced_tree_output_path;
 
     // TODO parse arguments for dictionary and sample text file paths
     dictionary_path = "../docs/dictionary.txt";
@@ -21,7 +21,10 @@ int main(int argc, char* argv[]) {
 
     // todo it would be cool to do this+ the checking on different threads
     dictionary.save_to_file(balanced_tree_output_path);
-    // todo check if dictionary is empty?
+    if (dictionary.is_empty()) {
+        cerr << RED << "Error: the provided dictionary was empty. Check the file path and try again." << RESET << endl;
+        return 1;
+    }
 
     SpellChecker spell_checker(dictionary);
 
@@ -29,8 +32,8 @@ int main(int argc, char* argv[]) {
         cout << GREEN << "No spelling errors detected." << RESET << endl;
 
     } else {
-        cerr << RED << "\nSpelling mistakes detected!" << RESET << endl;
-        cout << "The following words were not found in the dictionary: " << std::endl;
+        //cerr << RED << "\nSpelling mistakes detected!" << RESET << endl;
+        cout << RED << "The following words were not found in the dictionary: " << RESET << std::endl;
 
         for (const string& word : spell_checker.get_misspelled_words()) {
             cout << word << endl;

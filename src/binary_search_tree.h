@@ -164,6 +164,10 @@ public:
         return (find(data, m_root) != nullptr);
     }
 
+    bool is_empty() {
+        return m_root == nullptr;
+    }
+
     T find_closest_value(T given_value) {
         Node* closest_node = find_closest_value(given_value, m_root, m_root);
 

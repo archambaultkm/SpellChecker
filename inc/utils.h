@@ -31,7 +31,6 @@ std::vector<std::string> get_vec_from_file(std::string file_path) {
     try {
         ifs.open(file_path, std::fstream::in);
 
-        //todo split at the space
         while (getline(ifs, line, ' ')) {
             words_to_check.push_back(line);
         }

@@ -27,13 +27,13 @@ bool SpellChecker::run_check(std::string sample_file_path) {
             continue;
         }
 
-        if (m_dictionary.find_closest_value(word) != word) {
-            std::cout << word << " -> did you mean \"" << m_dictionary.find_closest_value(word) << "\"" << std::endl;
-        }
-
-//        if (!m_dictionary.find(word)) {
-//            m_misspelled_words.push_back(word);
+//        if (m_dictionary.find_closest_value(word) != word) {
+//            std::cout << word << " -> did you mean \"" << m_dictionary.find_closest_value(word) << "\"" << std::endl;
 //        }
+
+        if (!m_dictionary.find(word)) {
+            m_misspelled_words.push_back(word);
+        }
     }
 
     // if no words were misspelled, the check passed
