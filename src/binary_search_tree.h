@@ -22,25 +22,28 @@ private:
     Node* m_root;
 
 protected:
-    bool find(const T data, Node* node) {
-        if (!node) {
-            // reached the bottom without finding data
-            return false;
+    //TODO this could probably be written better
+    Node* find(const T data, Node* node) {
+        if (!node || node->m_data == data) {
+            // reached the bottom or key is present here
+            return node;
+
         } else if (data < node->m_data) {
-            find(data, node->m_left);
+            return find(data, node->m_left);
+
         } else if (data > node->m_data) {
-            find(data, node->m_right);
-        } else {
-            // data is present at the current node
-            return true;
+            return find(data, node->m_right);
         }
+
+        // default case return node
+        return node;
     }
 
     void print_tree(std::ostream& output, Node*& node, int indent) {
         if (node) {
-            print_tree(output, node->m_right, indent + 8);
+            print_tree(output, node->m_right, indent + 15);
             output << std::setw(indent) << node->m_data << std::endl;
-            print_tree(output, node->m_left, indent + 8);
+            print_tree(output, node->m_left, indent + 15);
         }
     }
 
@@ -110,7 +113,7 @@ protected:
 
     //builds a balanced bst from a sorted list
     // initial call will have left_bound set to 0 and right_bound set to sorted_list's size
-    void build(std::vector<T> sorted_list, int left_bound, int right_bound){
+    void build_balanced(std::vector<T> sorted_list, int left_bound, int right_bound){
 
         if (left_bound > right_bound) {
             return; //means that the list size is 0
@@ -119,8 +122,8 @@ protected:
         int midpoint = (left_bound+right_bound) / 2;
 
         insert(sorted_list.at(midpoint));
-        build(sorted_list, left_bound, midpoint-1);
-        build(sorted_list, midpoint+1, right_bound);
+        build_balanced(sorted_list, left_bound, midpoint-1);
+        build_balanced(sorted_list, midpoint+1, right_bound);
     }
 
 public:
@@ -131,7 +134,7 @@ public:
     ~BST() = default;
 
     bool find(T data) {
-        find(data, m_root);
+        return (find(data, m_root) != nullptr);
     }
 
     void remove(T data) {
@@ -142,11 +145,11 @@ public:
         insert(data, m_root);
     }
 
-    void build(std::vector<T> sorted_list) {
-        build(sorted_list, 0, sorted_list.size() - 1);
+    void build_balanced(std::vector<T> sorted_list) {
+        build_balanced(sorted_list, 0, sorted_list.size() - 1);
     }
 
-    void save_to_file(std::string file_name) {
+    bool save_to_file(std::string file_name) {
         std::ofstream ofs;
         std::string line;
 
@@ -155,13 +158,13 @@ public:
             ofs.open(file_name, std::fstream::trunc);
 
             //copy the bst into the file
-            print_tree(ofs, m_root, 0);
+            print_tree(ofs, m_root, 5);
 
         } catch (std::ofstream::failure &e) {
-            std::cout << "Exception writing to solution file" << std::endl;
+            return false;
         }
 
-        std::cout << "Balanced tree saved to " << file_name << std::endl;
+        return true;
     }
 };
 #endif //ASSIGNMENT_3_BINARY_SEARCH_TREE_H

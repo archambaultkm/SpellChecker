@@ -14,7 +14,6 @@ public:
     Dictionary() = default;
     Dictionary(std::string file_name);
     ~Dictionary() = default;
-    //void save_to_file(std::string file_name);
 };
 
 

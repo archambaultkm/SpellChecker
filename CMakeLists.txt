@@ -7,4 +7,6 @@ add_executable(Assignment_3
         src/main.cpp
         src/binary_search_tree.h
         src/dictionary.cpp
-        src/dictionary.h)
+        src/dictionary.h
+        src/spell_checker.cpp
+        src/spell_checker.h)
