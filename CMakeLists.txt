@@ -9,4 +9,5 @@ add_executable(Assignment_3
         src/dictionary.cpp
         src/dictionary.h
         src/spell_checker.cpp
-        src/spell_checker.h)
+        src/spell_checker.h
+        inc/utils.h)
