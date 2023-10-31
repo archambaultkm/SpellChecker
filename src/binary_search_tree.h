@@ -7,13 +7,14 @@
 
 #include <memory>
 #include <iomanip>
+#include <fstream> // TODO I don't want this here
+#include <iostream> // or this
 
 template <class T>
 class BST {
 private:
     struct Node {
         T m_data;
-        int m_height;
         Node* m_left;
         Node* m_right;
     };
@@ -54,14 +55,10 @@ protected:
             node = std::move(node->m_left);
         }
 
-        return std::move(node);
+        return node;
     }
 
     Node* remove(const T data, Node*& node) {
-
-        if (!node) {
-            return nullptr;
-        }
 
         if (data < node->m_data) {
             node-> m_left = remove(data, node->m_left);
@@ -97,8 +94,6 @@ protected:
             node = new Node();
             node-> m_data = data;
 
-            //return node;
-
         } else if (data < node->m_data) {
             // left leaf
             insert(data, node-> m_left);
@@ -109,78 +104,27 @@ protected:
 
         } else {
             // data is already present in tree
-            //return node;
-        }
-
-        //node = balance(node, data);
-    }
-
-//    Node* right_rotate(SmartNode y) {
-//        SmartNode x = y->m_left;
-//        SmartNode temp = x->m_right;
-//
-//        // rotate
-//        x->m_right = y;
-//        y->m_left = temp;
-//
-//        // update node height data
-//        y->m_height = 1 + max(y->m_left->m_height, y->m_right->m_height);
-//        x->m_height = 1 + max(x->m_left->m_height, x->m_right->m_height);
-//
-//        // return the node that took the place of the passed node's previous location in the tree
-//        return x;
-//    }
-//
-//    SmartNode left_rotate(SmartNode x) {
-//        SmartNode y = x->m_left;
-//        SmartNode temp = y->m_left;
-//
-//        // rotate
-//        y->m_left = x;
-//        x->m_right = temp;
-//
-//        // update node height data
-//        x->m_height = 1 + max(x->m_left->m_height, x->m_right->m_height);
-//        y->m_height = 1 + max(y->m_left->m_height, y->m_right->m_height);
-//
-//        // return the node that took the place of the passed node's previous location in the tree
-//        return y;
-//    }
-
-    Node* balance(Node* node, T data) {
-        // total height of subtree at this root is 1 (for itself) + the larger height of its branches
-        node->m_height = 1 + max(node->m_left->m_height, node->m_right->m_height);
-
-        // get the balance factor for this subtree
-        int balance = node->m_left->m_height - node->m_right->m_height;
-
-        // left left
-        if (balance > 1 && data < node->m_left->m_data) {
-            return right_rotate(node);
-        }
-        // left right
-        if (balance > 1 && data > node->m_left->m_data) {
-            node->m_left = left_rotate(node->m_left);
-            return right_rotate(node);
-        }
-        // right left
-        if (balance < -1 && data < node->m_right->m_data) {
-            node->m_right = right_rotate(node->m_right);
-            return left_rotate(node);
-        }
-        // right right
-        if (balance < -1 && data > node->m_right->m_data) {
-            return left_rotate(node);
+            // todo do anything?
         }
     }
 
-    // util function to get the larger of two int values
-    int max(int a, int b) {
-        return (a > b)? a : b;
+    //builds a balanced bst from a sorted list
+    // initial call will have left_bound set to 0 and right_bound set to sorted_list's size
+    void build(std::vector<T> sorted_list, int left_bound, int right_bound){
+
+        if (left_bound > right_bound) {
+            return; //means that the list size is 0
+        }
+
+        int midpoint = (left_bound+right_bound) / 2;
+
+        insert(sorted_list.at(midpoint));
+        build(sorted_list, left_bound, midpoint-1);
+        build(sorted_list, midpoint+1, right_bound);
     }
 
 public:
-    BST(){
+    BST() {
         m_root = nullptr;
     };
 
@@ -196,6 +140,28 @@ public:
 
     void insert(T data) {
         insert(data, m_root);
+    }
+
+    void build(std::vector<T> sorted_list) {
+        build(sorted_list, 0, sorted_list.size() - 1);
+    }
+
+    void save_to_file(std::string file_name) {
+        std::ofstream ofs;
+        std::string line;
+
+        try {
+            //overwrite the file completely if it already exists
+            ofs.open(file_name, std::fstream::trunc);
+
+            //copy the bst into the file
+            print_tree(ofs, m_root, 0);
+
+        } catch (std::ofstream::failure &e) {
+            std::cout << "Exception writing to solution file" << std::endl;
+        }
+
+        std::cout << "Balanced tree saved to " << file_name << std::endl;
     }
 };
 #endif //ASSIGNMENT_3_BINARY_SEARCH_TREE_H

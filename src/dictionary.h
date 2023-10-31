@@ -5,11 +5,16 @@
 #ifndef ASSIGNMENT_3_DICTIONARY_H
 #define ASSIGNMENT_3_DICTIONARY_H
 
-
+#include <vector>
+#include <string>
 #include "binary_search_tree.h"
 
-class Dictionary : BST<std::string>{
-
+class Dictionary : public BST<std::string> {
+public:
+    Dictionary() = default;
+    Dictionary(std::string file_name);
+    ~Dictionary() = default;
+    //void save_to_file(std::string file_name);
 };
 
 
