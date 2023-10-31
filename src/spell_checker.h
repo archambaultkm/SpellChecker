@@ -13,8 +13,6 @@ private:
     Dictionary m_dictionary;
     std::vector<std::string> m_misspelled_words;
 
-    std::vector<std::string> get_vec_from_file(std::string file_path);
-
 public:
     SpellChecker(const Dictionary& dictionary);
     std::vector<std::string> get_misspelled_words();

@@ -11,7 +11,6 @@
 
 class Dictionary : public BST<std::string> {
 public:
-    Dictionary() = default;
     Dictionary(std::string file_name);
     ~Dictionary() = default;
 };

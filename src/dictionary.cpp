@@ -22,6 +22,6 @@ Dictionary::Dictionary(std::string file_name) {
         build_balanced(ordered_list);
 
     } catch (std::ifstream::failure &e) {
-        std::cout << "Exception reading source file" << std::endl;
+        std::cout << "Exception reading dictionary file" << std::endl;
     }
 }
