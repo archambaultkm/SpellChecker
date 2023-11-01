@@ -12,12 +12,14 @@ class SpellChecker {
 private:
     Dictionary m_dictionary;
     std::vector<std::string> m_misspelled_words;
+    long m_elapsed_time {};
 
 public:
     SpellChecker(const Dictionary& dictionary);
     std::vector<std::string> get_misspelled_words();
     bool run_check(std::string sample_file_path);
-
+    long get_elapsed_time();
+    void print_result();
 };
 
 

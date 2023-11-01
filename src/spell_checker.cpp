@@ -4,7 +4,9 @@
 
 #include "spell_checker.h"
 #include "../inc/utils.h"
-#include <iostream>
+#include <chrono>
+
+typedef std::chrono::high_resolution_clock Clock;
 
 SpellChecker::SpellChecker(const Dictionary& dictionary) : m_dictionary(dictionary) { }
 
@@ -12,9 +14,20 @@ std::vector<std::string> SpellChecker::get_misspelled_words() {
     return m_misspelled_words;
 }
 
+long SpellChecker::get_elapsed_time() {
+    return m_elapsed_time;
+}
+
+void SpellChecker::print_result() {
+
+}
+
 bool SpellChecker::run_check(std::string sample_file_path) {
 
     std::vector<std::string> words_to_check = get_vec_from_file(sample_file_path);
+
+    // start the timer
+    auto start = Clock::now();
 
     // for every word in the vector, check if it is contained in m_dictionary
     for (auto& word : words_to_check) {
@@ -27,14 +40,19 @@ bool SpellChecker::run_check(std::string sample_file_path) {
             continue;
         }
 
-//        if (m_dictionary.find_closest_value(word) != word) {
-//            std::cout << word << " -> did you mean \"" << m_dictionary.find_closest_value(word) << "\"" << std::endl;
-//        }
-
         if (!m_dictionary.find(word)) {
+
+//            if (m_dictionary.find_closest_value(word) != word) {
+//                std::cout << word << " -> did you mean \"" << m_dictionary.find_closest_value(word) << "\"" << std::endl;
+//            }
+
             m_misspelled_words.push_back(word);
         }
     }
+
+    // stop the timer
+    auto duration = Clock::now();
+    m_elapsed_time = std::chrono::duration_cast<std::chrono::microseconds>(duration - start).count();
 
     // if no words were misspelled, the check passed
     if (empty(m_misspelled_words)) {

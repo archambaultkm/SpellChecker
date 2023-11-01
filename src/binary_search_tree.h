@@ -40,6 +40,7 @@ protected:
     }
 
     // recursively try to find the value closest to the given one (whether it exists in the tree or not)
+    // this doesn't work very accurately because if the value isn't found it just tunnels to the end of that branch
     Node* find_closest_value(T given_value, Node* node, Node* closest_match) {
         if (!node) {
             // reached the end without finding the value, return the last closest match
@@ -83,6 +84,7 @@ protected:
         return node;
     }
 
+    // remove a node from the tree and handle edge cases
     Node* remove(const T data, Node*& node) {
         if (data < node->m_data) {
             node-> m_left = remove(data, node->m_left);
@@ -137,7 +139,7 @@ protected:
     }
 
     // recursively builds a balanced bst from a sorted list
-    // initial call will have left_bound set to 0 and right_bound set to sorted_list's size
+    // initial call will have left_bound set to 0 and right_bound set to the list's size
     void build_balanced(std::vector<T> sorted_list, int left_bound, int right_bound){
         if (left_bound > right_bound) {
             return; //means that list has been depleted
@@ -154,45 +156,54 @@ protected:
     }
 
 public:
+    // default constructor
     BST() {
         m_root = nullptr;
     };
 
+    // default destructor
     ~BST() = default;
 
+    // entry point to recursive find()
     bool find(T data) {
         return (find(data, m_root) != nullptr);
     }
 
+    // check if tree contains data
     bool is_empty() {
         return m_root == nullptr;
     }
 
+    // entry point to recursive find_closest_data()
     T find_closest_value(T given_value) {
         Node* closest_node = find_closest_value(given_value, m_root, m_root);
 
         return closest_node->m_data;
     }
 
+    // entry point to recursive remove()
     void remove(T data) {
         remove(data, m_root);
     }
 
+    // entry point to recursive insert()
     void insert(T data) {
         insert(data, m_root);
     }
 
+    // entry point to recursive build_balanced()
     void build_balanced(std::vector<T> sorted_list) {
         build_balanced(sorted_list, 0, sorted_list.size() - 1);
     }
 
-    bool save_to_file(std::string file_name) {
+    // save formatted representation of this bst to the provided file path
+    bool save_to_file(const std::string& file_path) {
         std::ofstream ofs;
         std::string line;
 
         try {
             //overwrite the file completely if it already exists
-            ofs.open(file_name, std::fstream::trunc);
+            ofs.open(file_path, std::fstream::trunc);
 
             //copy the bst into the file
             print_tree(ofs, m_root, 5);
@@ -201,8 +212,9 @@ public:
             return false;
         }
 
+        std::cout << "Visualization of BST saved to " << file_path << "\n\n";
+
         return true;
     }
-
 };
 #endif //ASSIGNMENT_3_BINARY_SEARCH_TREE_H
