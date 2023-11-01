@@ -1,30 +1,31 @@
-//
-// Created by Kaitlyn Archambault on 2023-10-31.
-//
+/**
+ * @file SpellChecker.cpp
+ * @brief Implementation of the SpellChecker class.
+ * @author Kaitlyn Archambault
+ * @date 2023-10-31
+ */
 
 #include "spell_checker.h"
 #include "../inc/utils.h"
 #include <chrono>
+#include <utility>
 
 typedef std::chrono::high_resolution_clock Clock;
 
-SpellChecker::SpellChecker(const Dictionary& dictionary) : m_dictionary(dictionary) { }
+SpellChecker::SpellChecker(const Dictionary& dictionary) : m_dictionary(dictionary)
+{ }
 
 std::vector<std::string> SpellChecker::get_misspelled_words() {
     return m_misspelled_words;
 }
 
-long SpellChecker::get_elapsed_time() {
+long SpellChecker::get_elapsed_time() const {
     return m_elapsed_time;
-}
-
-void SpellChecker::print_result() {
-
 }
 
 bool SpellChecker::run_check(std::string sample_file_path) {
 
-    std::vector<std::string> words_to_check = get_vec_from_file(sample_file_path);
+    std::vector<std::string> words_to_check = get_vec_from_file(std::move(sample_file_path));
 
     // start the timer
     auto start = Clock::now();

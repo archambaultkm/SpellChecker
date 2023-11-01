@@ -1,25 +1,56 @@
-//
-// Created by Kaitlyn Archambault on 2023-10-31.
-//
+/**
+ * @file SpellChecker.h
+ * @brief Definition of the SpellChecker class.
+ * @author Kaitlyn Archambault
+ * @date 2023-10-31
+ */
 
 #ifndef ASSIGNMENT_3_SPELL_CHECKER_H
 #define ASSIGNMENT_3_SPELL_CHECKER_H
 
-
 #include "dictionary.h"
 
+/**
+ * @class SpellChecker
+ * @brief Uses a dictionary and a sample file to check for misspelled words.
+ */
 class SpellChecker {
 private:
-    Dictionary m_dictionary;
-    std::vector<std::string> m_misspelled_words;
-    long m_elapsed_time {};
+    Dictionary m_dictionary; // BST containing correctly-spelled words
+    std::vector<std::string> m_misspelled_words; // list of misspelled words found during last check
+    long m_elapsed_time {}; // time elapsed during the spell check
 
 public:
-    SpellChecker(const Dictionary& dictionary);
+    /**
+     * @brief Constructor that initializes the checker's dictionary.
+     *
+     * @param dictionary The dictionary to use for spell checking.
+     */
+    explicit SpellChecker(const Dictionary& dictionary);
+
+    /**
+     * @brief Get a vector of misspelled words found during the last spell check.
+     *
+     * @return A vector containing the misspelled words.
+     */
     std::vector<std::string> get_misspelled_words();
+
+    /**
+     * @brief Run a spell check on a sample text file.
+     *
+     * This function reads a text file, checks for misspelled words, and stores the results.
+     *
+     * @param sample_file_path The file path of the sample text file to check.
+     * @return True if the spell check passed (no misspelled words found), false otherwise.
+     */
     bool run_check(std::string sample_file_path);
-    long get_elapsed_time();
-    void print_result();
+
+    /**
+     * @brief Get the elapsed time in microseconds for the last spell check.
+     *
+     * @return The elapsed time in microseconds.
+     */
+    long get_elapsed_time() const;
 };
 
 

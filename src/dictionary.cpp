@@ -1,6 +1,9 @@
-//
-// Created by Kaitlyn Archambault on 2023-10-30.
-//
+/**
+ * @file Dictionary.cpp
+ * @brief Implementation of Dictionary class.
+ * @author Kaitlyn Archambault
+ * @date 2023-10-30
+ */
 
 #include "dictionary.h"
 #include <fstream>
@@ -19,6 +22,7 @@ Dictionary::Dictionary(std::string file_name) {
             ordered_list.push_back(line);
         }
 
+        // build a balanced BST using the sorted list
         build_balanced(ordered_list);
 
     } catch (std::ifstream::failure &e) {
