@@ -10,4 +10,5 @@ add_executable(Assignment_3
         src/dictionary.h
         src/spell_checker.cpp
         src/spell_checker.h
-        inc/utils.h)
+        inc/utils.h
+        inc/timer.h)

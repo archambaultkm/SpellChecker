@@ -1,25 +1,31 @@
-#include <iostream>
+/**
+ * @file main.cpp
+ * @author Kaitlyn Archambault
+ * @date 2023-10-30
+ */
+
 #include "spell_checker.h"
 #include "../inc/colours.h"
 
+#include <iostream>
 #include <string>
 #include <regex>
 
 using namespace std;
 
-const string expected_arg_format = "\"./check ../tests/test.txt ../tests/dictionary.txt\"";
+const string expected_arg_format = "\"./check ../tests/test.txt ../tests/dictionary.txt balanced_tree.txt\"";
 bool is_valid_file_path(const string &provided_file_path);
 
 int main(int argc, char* argv[]) {
 
     // validate program arguments for sample and dictionary files
-    if (argc != 3) {
+    if (argc != 4) {
         cerr << RED << "Wrong number of arguments: expected input resembling " << expected_arg_format << RESET << endl;
 
         return 1;
     }
 
-    if (!is_valid_file_path(argv[1]) || !is_valid_file_path(argv[2])) {
+    if (!is_valid_file_path(argv[1]) || !is_valid_file_path(argv[2]) || !is_valid_file_path(argv[3])) {
         cerr << RED << "Must enter a valid .txt format file name for all provided files." << RESET << endl;
         cout << CYAN << "Arguments should resemble " << expected_arg_format << RESET << endl;
 
@@ -29,14 +35,17 @@ int main(int argc, char* argv[]) {
     // initialize file paths from validated arguments
     string sample_text_path = argv[1];
     string dictionary_path = argv[2];
-    string balanced_tree_output_path = "balanced_tree.txt"; // todo ask if this needs to be specified too
+    string balanced_tree_output_path = argv[3];
 
-    // initialize dictionary and validate it contains data
+    // initialize dictionary and validate that it contains data
     Dictionary dictionary(dictionary_path);
     if (dictionary.is_empty()) {
         cerr << RED << "Error: the provided dictionary was empty. Check the file path and try again." << RESET << endl;
         return 1;
     }
+
+    // see how long it took to build/ balance the bst
+    cout << "Dictionary built and balanced in " << dictionary.get_elapsed_time() << " ms." << endl;
 
     // save a representation of the bst to a file for review
     dictionary.save_to_file(balanced_tree_output_path);
@@ -50,11 +59,14 @@ int main(int argc, char* argv[]) {
 
     } else {
         cout << RED << "Spelling errors detected!" << RESET << std::endl;
-        spell_checker.print_result();
+
+        for (auto& word : spell_checker.get_misspelled_words()) {
+            cout << word << endl;
+        }
     }
 
     // print the time elapsed during the spell check
-    cout << "Check took " << spell_checker.get_elapsed_time() << " ms." << endl;
+    cout << "\nCheck took " << spell_checker.get_elapsed_time() << " ms." << endl;
 
     return 0;
 }

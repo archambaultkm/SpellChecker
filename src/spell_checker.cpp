@@ -19,8 +19,8 @@ std::vector<std::string> SpellChecker::get_misspelled_words() {
     return m_misspelled_words;
 }
 
-long SpellChecker::get_elapsed_time() const {
-    return m_elapsed_time;
+long SpellChecker::get_elapsed_time() {
+    return m_timer.get_elapsed_time();
 }
 
 bool SpellChecker::run_check(std::string sample_file_path) {
@@ -28,7 +28,7 @@ bool SpellChecker::run_check(std::string sample_file_path) {
     std::vector<std::string> words_to_check = get_vec_from_file(std::move(sample_file_path));
 
     // start the timer
-    auto start = Clock::now();
+    m_timer.start();
 
     // for every word in the vector, check if it is contained in m_dictionary
     for (auto& word : words_to_check) {
@@ -52,8 +52,7 @@ bool SpellChecker::run_check(std::string sample_file_path) {
     }
 
     // stop the timer
-    auto duration = Clock::now();
-    m_elapsed_time = std::chrono::duration_cast<std::chrono::microseconds>(duration - start).count();
+    m_timer.stop();
 
     // if no words were misspelled, the check passed
     if (empty(m_misspelled_words)) {

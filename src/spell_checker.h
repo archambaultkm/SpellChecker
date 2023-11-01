@@ -9,6 +9,7 @@
 #define ASSIGNMENT_3_SPELL_CHECKER_H
 
 #include "dictionary.h"
+#include "../inc/timer.h"
 
 /**
  * @class SpellChecker
@@ -18,7 +19,7 @@ class SpellChecker {
 private:
     Dictionary m_dictionary; // BST containing correctly-spelled words
     std::vector<std::string> m_misspelled_words; // list of misspelled words found during last check
-    long m_elapsed_time {}; // time elapsed during the spell check
+    Timer<> m_timer; // timer using template default chrono high resolution clock
 
 public:
     /**
@@ -50,7 +51,7 @@ public:
      *
      * @return The elapsed time in microseconds.
      */
-    long get_elapsed_time() const;
+    long get_elapsed_time();
 };
 
 

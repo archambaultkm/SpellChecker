@@ -11,12 +11,16 @@
 #include <vector>
 #include <string>
 #include "binary_search_tree.h"
+#include "../inc/timer.h"
 
 /**
  * @class Dictionary
  * @brief An extension of a BST that reads a list of strings from a file and builds a balanced tree.
  */
 class Dictionary : public BST<std::string> {
+private:
+    Timer<> m_timer;
+
 public:
     /**
      * @brief Constructor to create a Dictionary object from a text file.
@@ -26,6 +30,8 @@ public:
      * @param file_name The path to the file containing data.
      */
     explicit Dictionary(std::string file_name);
+
+    long get_elapsed_time();
 };
 
 
