@@ -4,9 +4,8 @@
  * @author Kaitlyn Archambault
  * @date 2023-10-31
  */
-
-#include "spell_checker.h"
 #include "../inc/utils.h"
+#include "spell_checker.h"
 #include <chrono>
 #include <utility>
 
@@ -23,9 +22,9 @@ long SpellChecker::get_elapsed_time() {
     return m_timer.get_elapsed_time();
 }
 
-bool SpellChecker::run_check(std::string sample_file_path) {
+bool SpellChecker::run_check(const std::string& sample_file_path) {
 
-    std::vector<std::string> words_to_check = get_vec_from_file(std::move(sample_file_path));
+    std::vector<std::string> words_to_check = get_vec_from_file(sample_file_path);
 
     // start the timer
     m_timer.start();

@@ -44,7 +44,7 @@ public:
      * @param sample_file_path The file path of the sample text file to check.
      * @return True if the spell check passed (no misspelled words found), false otherwise.
      */
-    bool run_check(std::string sample_file_path);
+    bool run_check(const std::string& sample_file_path);
 
     /**
      * @brief Get the elapsed time in microseconds for the last spell check.

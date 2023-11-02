@@ -3,32 +3,23 @@
  * @author Kaitlyn Archambault
  * @date 2023-10-30
  */
-
+#include "../inc/utils.h"
 #include "spell_checker.h"
 #include "../inc/colours.h"
 
 #include <iostream>
 #include <string>
-#include <regex>
 
 using namespace std;
 
-const string expected_arg_format = "\"./check ../tests/test.txt ../tests/dictionary.txt balanced_tree.txt\"";
-bool is_valid_file_path(const string &provided_file_path);
+bool valid_arguments(int argc, int expected_num_args, char* argv[], const string& expected_format);
 
 int main(int argc, char* argv[]) {
 
-    // validate program arguments for sample and dictionary files
-    if (argc != 4) {
-        cerr << RED << "Wrong number of arguments: expected input resembling " << expected_arg_format << RESET << endl;
+    // determine if the right number of program arguments were provided/ all are in the correct format
+    string expected_format = "\"./check ../tests/test.txt ../tests/dictionary.txt balanced_tree.txt\"";
 
-        return 1;
-    }
-
-    if (!is_valid_file_path(argv[1]) || !is_valid_file_path(argv[2]) || !is_valid_file_path(argv[3])) {
-        cerr << RED << "Must enter a valid .txt format file name for all provided files." << RESET << endl;
-        cout << CYAN << "Arguments should resemble " << expected_arg_format << RESET << endl;
-
+    if (!valid_arguments(argc, 4, argv, expected_format)) {
         return 1;
     }
 
@@ -71,16 +62,22 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-/**
- * Validate provided file path with regex
- *
- * @param provided_file_path file path input by user
- *
- * @returns true if the provided file path is in a valid format, false otherwise
- * @note Expected file path format is "(/path/)file_name.txt"
- */
-bool is_valid_file_path(const string &provided_file_path) {
-    regex valid_file_path(R"(^(?:..)?\/?(?:[a-zA-Z0-9_-]+[\/])?(?:[a-zA-Z0-9_-])+\.txt$)");
+// validate program arguments for tree destination, sample, and dictionary files
+bool valid_arguments(int argc, int expected_num_args, char* argv[], const string& expected_format) {
+    if (argc != expected_num_args) {
+        cerr << RED << "Wrong number of arguments: expected" << expected_num_args << " but " << argc << "were provided." << RESET << endl;
+        cout << CYAN << "Arguments should resemble " << expected_format << RESET << endl;
 
-    return regex_match(provided_file_path, valid_file_path);
+        return false;
+    }
+
+    // all program arguments are expected to be txt files
+    if (!is_valid_file_path(argv[1], "txt") || !is_valid_file_path(argv[2], "txt") || !is_valid_file_path(argv[3], "txt")) {
+        cerr << RED << "Must enter a valid .txt format file name for all provided files." << RESET << endl;
+        cout << CYAN << "Arguments should resemble " << expected_format << RESET << endl;
+
+        return false;
+    }
+
+    return true;
 }
