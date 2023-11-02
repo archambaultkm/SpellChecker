@@ -11,7 +11,7 @@
 #include <vector>
 #include <string>
 #include "binary_search_tree.h"
-#include "../inc/timer.h"
+#include "timer.h"
 
 /**
  * @class Dictionary

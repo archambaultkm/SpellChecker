@@ -9,7 +9,7 @@
 #define ASSIGNMENT_3_SPELL_CHECKER_H
 
 #include "dictionary.h"
-#include "../inc/timer.h"
+#include "timer.h"
 
 /**
  * @class SpellChecker

@@ -10,6 +10,8 @@
 #ifndef ASSIGNMENT_3_BINARY_SEARCH_TREE_H
 #define ASSIGNMENT_3_BINARY_SEARCH_TREE_H
 
+#include "utils.h"
+
 #include <memory>
 #include <iomanip>
 #include <fstream> // TODO I don't want this here
@@ -66,22 +68,32 @@ private:
      *
      * @note this doesn't work very accurately because if the value isn't found it just tunnels to the end of that branch
      */
-    Node* find_closest_value(T given_value, Node* node, Node* closest_match) {
+    Node* find_closest_value(T given_value, Node* node, Node*& closest_match, int& min_difference) {
         if (!node) {
-            // reached the end without finding the value, return the last closest match
+            // Reached the end without finding the value, return the last closest match
             return closest_match;
+        }
 
-        } else if (given_value == node->m_data) {
+        // determine the difference between values
+        int this_difference = difference(given_value, node->m_data);
+
+        // update the smallest distance found if applicable
+        if (this_difference <= min_difference) {
+            closest_match = node;
+            min_difference = this_difference;
+        }
+
+        if (given_value == node->m_data) {
             // value exists in the tree
             return node;
 
         } else if (given_value < node->m_data) {
             //given value is smaller, move left and update closest match
-            return find_closest_value(given_value, node->m_left, node);
+            return find_closest_value(given_value, node->m_left, closest_match, min_difference);
 
         } else {
             //given value is larger, move right and update closest match
-            return find_closest_value(given_value, node->m_right, node);
+            return find_closest_value(given_value, node->m_right, closest_match, min_difference);
         }
     }
 
@@ -257,7 +269,9 @@ public:
      * @note this doesn't work yet
      */
     T find_closest_value(T data) {
-        Node* closest_node = find_closest_value(data, m_root, m_root);
+        Node* closest_match = nullptr;
+        int starting_distance = std::numeric_limits<int>::max();
+        Node* closest_node = find_closest_value(data, m_root, closest_match, starting_distance);
 
         return closest_node->m_data;
     }

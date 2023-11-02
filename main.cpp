@@ -3,9 +3,9 @@
  * @author Kaitlyn Archambault
  * @date 2023-10-30
  */
-#include "../inc/utils.h"
-#include "spell_checker.h"
-#include "../inc/colours.h"
+#include "inc/utils.h"
+#include "inc/spell_checker.h"
+#include "inc/colours.h"
 
 #include <iostream>
 #include <string>

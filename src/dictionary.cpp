@@ -5,7 +5,7 @@
  * @date 2023-10-30
  */
 
-#include "dictionary.h"
+#include "../inc/dictionary.h"
 #include <fstream>
 #include <iostream>
 

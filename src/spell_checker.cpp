@@ -5,7 +5,7 @@
  * @date 2023-10-31
  */
 #include "../inc/utils.h"
-#include "spell_checker.h"
+#include "../inc/spell_checker.h"
 #include <chrono>
 #include <utility>
 
@@ -42,9 +42,9 @@ bool SpellChecker::run_check(const std::string& sample_file_path) {
 
         if (!m_dictionary.find(word)) {
 
-//            if (m_dictionary.find_closest_value(word) != word) {
-//                std::cout << word << " -> did you mean \"" << m_dictionary.find_closest_value(word) << "\"" << std::endl;
-//            }
+            if (m_dictionary.find_closest_value(word) != word) {
+                std::cout << word << " -> did you mean \"" << m_dictionary.find_closest_value(word) << "\"" << std::endl;
+            }
 
             m_misspelled_words.push_back(word);
         }
