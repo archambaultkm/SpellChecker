@@ -37,6 +37,7 @@ int main(int argc, char* argv[]) {
 
     // see how long it took to build/ balance the bst
     cout << "Dictionary built and balanced in " << dictionary.get_elapsed_time() << " ms." << endl;
+    cout << "\n"; // for nice formatting
 
     // save a representation of the bst to a file for review
     dictionary.save_to_file(balanced_tree_output_path);
@@ -46,14 +47,16 @@ int main(int argc, char* argv[]) {
 
     // run the spell check and provide details of the outcome
     if (spell_checker.run_check(sample_text_path)) {
+        cout << "\n";
         cout << GREEN << "No spelling errors detected." << RESET << endl;
 
     } else {
+        cout << "\n";
         cout << RED << "Spelling errors detected!" << RESET << std::endl;
 
-        for (auto& word : spell_checker.get_misspelled_words()) {
-            cout << word << endl;
-        }
+//        for (auto& word : spell_checker.get_misspelled_words()) {
+//            cout << word << endl;
+//        }
     }
 
     // print the time elapsed during the spell check

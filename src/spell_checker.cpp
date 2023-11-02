@@ -34,7 +34,7 @@ bool SpellChecker::run_check(const std::string& sample_file_path) {
         // convert the word to lowercase
         std::transform(word.begin(), word.end(), word.begin(), ::tolower);
 
-        // remove special characters
+        // remove special characters (and continue if the word *only* contained special characters)
         word = remove_non_alpha(word);
         if (empty(word)) {
             continue;

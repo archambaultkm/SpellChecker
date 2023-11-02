@@ -19,7 +19,7 @@ concept Numeric = std::is_arithmetic_v<T>;
 // handles numeric and string types
 template <typename T>
 auto difference(T a, T b) {
-    if constexpr (!std::is_arithmetic_v<T>) {
+    if constexpr (!Numeric<T>) {
         return levenshtein_distance(a, b);
     } else {
         return (a > b) ? (a - b) : (b - a);

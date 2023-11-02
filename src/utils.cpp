@@ -7,27 +7,25 @@
 #include <fstream>
 #include <iostream>
 
-// made from pseudocode found at https://en.wikipedia.org/wiki/Levenshtein_distance
+// made from pseudocode found at https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
 int levenshtein_distance(const std::string& a, const std::string& b) {
     int m = a.length();
     int n = b.length();
-    int substitution_cost;
 
     // Create a 2D vector to store the distances
     std::vector<std::vector<int>> d(m + 1, std::vector<int>(n + 1, 0));
 
     for (int i = 1; i <= m; i++) {
         for (int j = 1; j <= n; j++) {
-            if (a[i] == b[j]) {
-                substitution_cost = 0;
-            } else {
-                substitution_cost = 1;
-            }
-            //int cost = (a[i - 1] == b[j - 1]) ? 0 : 1;
+            int substitution_cost = (a[i - 1] == b[j - 1]) ? 0 : 1;
 
             d[i][j] = std::min({d[i - 1][j] + 1,                        // deletion
                                 d[i][j - 1] + 1,                        // insertion
                                 d[i - 1][j - 1] + substitution_cost});  // substitution
+
+            if (i > 1 && j > 1 && a[i] == b[j-1] && a[i-1] == b[j]) {
+                d[i][j] = std::min(d[i][j], d[i - 2][j - 2] + 1);       // transposition
+            }
         }
     }
 
