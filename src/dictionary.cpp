@@ -6,35 +6,22 @@
  */
 
 #include "../inc/dictionary.h"
+
 #include <fstream>
 #include <iostream>
 
-Dictionary::Dictionary(std::string file_name) {
-    //std::ifstream ifs;
-    //std::string line;
-    std::vector<std::string> ordered_list;
+Dictionary::Dictionary(const std::string& file_name) {
+    //start the timer
+    m_timer.start();
 
-    // attempt to open the provided file and read its contents into the dictionary list
-//    try {
-//        ifs.open(file_name, std::fstream::in);
-//
-//        // start the timer
-//        m_timer.start();
-//
-//        while (getline(ifs, line)) {
-//            ordered_list.push_back(line);
-//        }
-        ordered_list = get_vec_from_file(file_name);
+    // build a balanced BST using an ordered list
+    std::vector<std::string> ordered_list = get_vec_from_file(file_name);
+    //  make sure it's in alphabetical order
+    std::sort(ordered_list.begin(), ordered_list.end());
+    build_balanced(ordered_list);
 
-        // build a balanced BST using the sorted list
-        build_balanced(ordered_list);
-
-        // stop the timer
-        m_timer.stop();
-
-//    } catch (std::ifstream::failure &e) {
-//        std::cout << "Exception reading dictionary file" << std::endl;
-//    }
+    // stop the timer
+    m_timer.stop();
 }
 
 long Dictionary::get_elapsed_time() {
@@ -56,5 +43,5 @@ void Dictionary::save_to_file(const std::string& file_path) {
         std::cerr << "Exception saving Dictionary to provided file path: " << file_path << std::endl;
     }
 
-    std::cout << "Visualization of Dictionary saved to " << file_path << "\n\n";
+    std::cout << "Visualization of dictionary saved to " << file_path << "\n\n";
 }

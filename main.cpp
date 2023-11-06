@@ -29,7 +29,7 @@ bool valid_arguments(int argc, int expected_num_args, char* argv[], const string
 /**
  * @brief The main entry point of the program.
  *
- * This function parses command-line arguments, initializes data structures, and performs
+ * This function parses command-line arguments and performs
  * spell checking using a balanced binary search tree (BST).
  *
  * @param argc Number of command-line arguments.

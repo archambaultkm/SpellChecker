@@ -12,7 +12,6 @@
 
 #include "utils.h"
 
-#include <memory>
 #include <iomanip>
 #include <iostream>
 
@@ -81,16 +80,17 @@ private:
             min_difference = this_difference;
         }
 
+        // choose a direction to keep searching the tree
         if (given_value == node->m_data) {
             // value exists in the tree
             return node;
 
         } else if (given_value < node->m_data) {
-            //given value is smaller, move left and update closest_match
+            //given value is smaller, move left
             return find_closest_value(given_value, node->m_left, closest_match, min_difference);
 
         } else {
-            //given value is larger, move right and update closest_match
+            //given value is larger, move right
             return find_closest_value(given_value, node->m_right, closest_match, min_difference);
         }
     }

@@ -7,10 +7,8 @@
 #include "../inc/utils.h"
 #include "../inc/colours.h"
 #include "../inc/spell_checker.h"
-#include <chrono>
-#include <utility>
 
-typedef std::chrono::high_resolution_clock Clock;
+#include <utility>
 
 SpellChecker::SpellChecker(const Dictionary& dictionary) : m_dictionary(dictionary)
 { }

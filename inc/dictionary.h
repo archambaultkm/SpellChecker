@@ -8,12 +8,12 @@
 #ifndef ASSIGNMENT_3_DICTIONARY_H
 #define ASSIGNMENT_3_DICTIONARY_H
 
+#include "binary_search_tree.h"
+#include "timer.h"
+
 #include <vector>
 #include <string>
 #include <fstream>
-
-#include "binary_search_tree.h"
-#include "timer.h"
 
 /**
  * @class Dictionary
@@ -31,7 +31,7 @@ public:
      *
      * @param file_name The path to the file containing data.
      */
-    explicit Dictionary(std::string file_name);
+    explicit Dictionary(const std::string& file_name);
 
     /**
     * @brief Get the elapsed time for building the dictionary tree.

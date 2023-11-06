@@ -19,7 +19,7 @@ class SpellChecker {
 private:
     Dictionary m_dictionary; // BST containing correctly-spelled words
     std::vector<std::string> m_misspelled_words; // list of misspelled words found during last check
-    Timer<> m_timer; // timer using template default chrono high resolution clock
+    Timer<> m_timer; // timer using template default (chrono high resolution clock)
 
 public:
     /**
@@ -46,6 +46,12 @@ public:
      */
     void run_check(const std::string& sample_file_path);
 
+    /**
+     * @brief Output the results of the check to the console
+     *
+     * If errors were found during the last check, indicates all misspelled words and suggested corrections.
+     *
+     */
     void print_results();
 
     /**
