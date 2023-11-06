@@ -8,6 +8,7 @@
 #include <regex>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 std::string remove_non_alpha(const std::string& str) {
 
@@ -29,12 +30,17 @@ std::vector<std::string> get_vec_from_file(const std::string& file_path) {
     std::string line;
     std::vector<std::string> words;
 
-    // attempt to open the provided file and read its contents into the dictionary list
+    // attempt to open the provided file and read its contents into the list
     try {
         ifs.open(file_path, std::fstream::in);
 
-        while (getline(ifs, line, ' ')) {
-            words.push_back(line);
+        while (getline(ifs, line)) {
+            // Split the line into words based on spaces
+            std::istringstream iss(line);
+            std::string word;
+            while (iss >> word) {
+                words.push_back(word);
+            }
         }
 
     } catch (std::ifstream::failure &e) {

@@ -10,20 +10,21 @@
 #include <iostream>
 
 Dictionary::Dictionary(std::string file_name) {
-    std::ifstream ifs;
-    std::string line;
+    //std::ifstream ifs;
+    //std::string line;
     std::vector<std::string> ordered_list;
 
     // attempt to open the provided file and read its contents into the dictionary list
-    try {
-        ifs.open(file_name, std::fstream::in);
-
-        // start the timer
-        m_timer.start();
-
-        while (getline(ifs, line)) {
-            ordered_list.push_back(line);
-        }
+//    try {
+//        ifs.open(file_name, std::fstream::in);
+//
+//        // start the timer
+//        m_timer.start();
+//
+//        while (getline(ifs, line)) {
+//            ordered_list.push_back(line);
+//        }
+        ordered_list = get_vec_from_file(file_name);
 
         // build a balanced BST using the sorted list
         build_balanced(ordered_list);
@@ -31,9 +32,9 @@ Dictionary::Dictionary(std::string file_name) {
         // stop the timer
         m_timer.stop();
 
-    } catch (std::ifstream::failure &e) {
-        std::cout << "Exception reading dictionary file" << std::endl;
-    }
+//    } catch (std::ifstream::failure &e) {
+//        std::cout << "Exception reading dictionary file" << std::endl;
+//    }
 }
 
 long Dictionary::get_elapsed_time() {
