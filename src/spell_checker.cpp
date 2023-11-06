@@ -5,6 +5,7 @@
  * @date 2023-10-31
  */
 #include "../inc/utils.h"
+#include "../inc/colours.h"
 #include "../inc/spell_checker.h"
 #include <chrono>
 #include <utility>
@@ -22,7 +23,7 @@ long SpellChecker::get_elapsed_time() {
     return m_timer.get_elapsed_time();
 }
 
-bool SpellChecker::run_check(const std::string& sample_file_path) {
+void SpellChecker::run_check(const std::string& sample_file_path) {
 
     std::vector<std::string> words_to_check = get_vec_from_file(sample_file_path);
 
@@ -40,23 +41,24 @@ bool SpellChecker::run_check(const std::string& sample_file_path) {
             continue;
         }
 
+        // keep track of any word not found in the dictionary
         if (!m_dictionary.find(word)) {
-
-            if (m_dictionary.find_closest_value(word) != word) {
-                std::cout << word << " -> did you mean \"" << m_dictionary.find_closest_value(word) << "\"" << std::endl;
-            }
-
             m_misspelled_words.push_back(word);
         }
     }
 
     // stop the timer
     m_timer.stop();
+}
 
-    // if no words were misspelled, the check passed
+void SpellChecker::print_results() {
     if (empty(m_misspelled_words)) {
-        return true;
-    }
+        std::cout << GREEN << "No spelling errors detected." << RESET << std::endl;
 
-    return false;
+    } else {
+        std::cout << RED << "Spelling errors detected!" << RESET << std::endl;
+        for (auto& word : m_misspelled_words) {
+            std::cout << word << " -> did you mean \"" << m_dictionary.find_closest_value(word) << "\"?" << std::endl;
+        }
+    }
 }

@@ -11,23 +11,8 @@
 #include <string>
 #include <concepts>
 
-int levenshtein_distance(const std::string& a, const std::string& b);
-
-template <typename T>
-concept Numeric = std::is_arithmetic_v<T>;
-
-// handles numeric and string types
-template <typename T>
-auto difference(T a, T b) {
-    if constexpr (!Numeric<T>) {
-        return levenshtein_distance(a, b);
-    } else {
-        return (a > b) ? (a - b) : (b - a);
-    }
-}
-
 /**
- * Remove non-alphabet characters from a provided string
+ * Remove numbers or special characters from a provided string
  *
  * @param str the string to operate on
  *
@@ -54,5 +39,43 @@ std::vector<std::string> get_vec_from_file(const std::string& file_path);
  * @note in the future it would be nice to be able to provide multiple extensions
  */
 bool is_valid_file_path(const std::string &provided_file_path, std::string extension);
+
+/**
+ * @brief Calculate the Levenshtein distance between two strings.
+ *
+ * The Levenshtein distance is a measure of the similarity between two strings
+ * by calculating the minimum number of single-character edits (insertions, deletions, or substitutions)
+ * required to change one string into the other.
+ *
+ * @param a The first input string.
+ * @param b The second input string.
+ * @return The Levenshtein distance between strings 'a' and 'b'.
+ */
+int levenshtein_distance(const std::string& a, const std::string& b);
+
+/**
+ * @brief Calculate the absolute difference between two values.
+ *
+ * @tparam T The type of values to compare.
+ * @param a value 1.
+ * @param b value 2.
+ * @return The absolute difference between 'a' and 'b'.
+ */
+template <typename T>
+T difference(T a, T b) {
+    return (a > b) ? (a - b) : (b - a);
+}
+
+/**
+ * @brief Calculate the difference between 2 strings in terms of the edit operations required
+ * to transform one string into the other.
+ *
+ * @param a string 1.
+ * @param b string 2.
+ * @return The difference (Levenshtein distance) between strings 'a' and 'b'.
+ */
+inline int difference(const std::string& a, const std::string& b) {
+    return levenshtein_distance(a, b);
+}
 
 #endif //ASSIGNMENT_3_UTILS_H

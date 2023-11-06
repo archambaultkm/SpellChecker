@@ -14,8 +14,7 @@
 
 #include <memory>
 #include <iomanip>
-#include <fstream> // TODO I don't want this here
-#include <iostream> // or this
+#include <iostream>
 
 /**
  * @class BST
@@ -27,6 +26,7 @@ class BST {
 private:
     /**
      * @struct Node
+     * @brief BST Nodes contain data and pointers to left and right subtree roots
      */
     struct Node {
         T m_data; // the data stored in the node
@@ -65,8 +65,6 @@ private:
      * @param node The current node being searched.
      * @param closest_match The closest matching node found so far.
      * @return A pointer to the closest matching node.
-     *
-     * @note this doesn't work very accurately because if the value isn't found it just tunnels to the end of that branch
      */
     Node* find_closest_value(T given_value, Node* node, Node*& closest_match, int& min_difference) {
         if (!node) {
@@ -77,7 +75,7 @@ private:
         // determine the difference between values
         int this_difference = difference(given_value, node->m_data);
 
-        // update the smallest distance found if applicable
+        // update the smallest difference found if applicable
         if (this_difference <= min_difference) {
             closest_match = node;
             min_difference = this_difference;
@@ -88,11 +86,11 @@ private:
             return node;
 
         } else if (given_value < node->m_data) {
-            //given value is smaller, move left and update closest match
+            //given value is smaller, move left and update closest_match
             return find_closest_value(given_value, node->m_left, closest_match, min_difference);
 
         } else {
-            //given value is larger, move right and update closest match
+            //given value is larger, move right and update closest_match
             return find_closest_value(given_value, node->m_right, closest_match, min_difference);
         }
     }
@@ -266,7 +264,6 @@ public:
      *
      * @param data The data to find an approximate match for
      * @return The data that was deemed the closest match
-     * @note this doesn't work yet
      */
     T find_closest_value(T data) {
         Node* closest_match = nullptr;
@@ -304,27 +301,13 @@ public:
     }
 
     /**
-     * @brief Save a nicely formatted representation of the BST to a file.
+     * @brief Entry point to recursive print_tree()
      *
-     * @param file_path The file path where the BST visualization will be saved.
-     * @return True if the save operation was successful, false otherwise.
+     * @param output The output stream where the tree will be printed.
+     * @param indent The starting indentation.
      */
-    void save_to_file(const std::string& file_path) {
-        std::ofstream ofs;
-        std::string line;
-
-        try {
-            //overwrite the file completely if it already exists
-            ofs.open(file_path, std::fstream::trunc);
-
-            //copy the bst into the file
-            print_tree(ofs, m_root, 5);
-
-        } catch (std::ofstream::failure &e) {
-            std::cerr << "Exception saving BST to provided file path: " << file_path << std::endl;
-        }
-
-        std::cout << "Visualization of BST saved to " << file_path << "\n\n";
+    void print_tree(std::ostream& output, int indent) {
+        print_tree(output, m_root, indent);
     }
 };
 #endif //ASSIGNMENT_3_BINARY_SEARCH_TREE_H

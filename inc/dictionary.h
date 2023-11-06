@@ -10,6 +10,8 @@
 
 #include <vector>
 #include <string>
+#include <fstream>
+
 #include "binary_search_tree.h"
 #include "timer.h"
 
@@ -19,7 +21,7 @@
  */
 class Dictionary : public BST<std::string> {
 private:
-    Timer<> m_timer;
+    Timer<> m_timer; // timer using default clock to time building the dictionary
 
 public:
     /**
@@ -31,7 +33,19 @@ public:
      */
     explicit Dictionary(std::string file_name);
 
+    /**
+    * @brief Get the elapsed time for building the dictionary tree.
+    *
+    * @return The elapsed time in microseconds.
+    */
     long get_elapsed_time();
+
+    /**
+     * @brief Save a nicely formatted representation of the BST to a file.
+     *
+     * @param file_path The file path where the BST visualization will be saved.
+     */
+    void save_to_file(const std::string& file_path);
 };
 
 

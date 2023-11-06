@@ -39,3 +39,21 @@ Dictionary::Dictionary(std::string file_name) {
 long Dictionary::get_elapsed_time() {
     return m_timer.get_elapsed_time();
 }
+
+void Dictionary::save_to_file(const std::string& file_path) {
+    std::ofstream ofs;
+    std::string line;
+
+    try {
+        //overwrite the file completely if it already exists
+        ofs.open(file_path, std::fstream::trunc);
+
+        //copy the bst into the file
+        print_tree(ofs, 5);
+
+    } catch (std::ofstream::failure &e) {
+        std::cerr << "Exception saving Dictionary to provided file path: " << file_path << std::endl;
+    }
+
+    std::cout << "Visualization of Dictionary saved to " << file_path << "\n\n";
+}

@@ -1,5 +1,6 @@
 /**
  * @file main.cpp
+ * @brief A C++ program for spell checking using a balanced binary search tree (BST).
  * @author Kaitlyn Archambault
  * @date 2023-10-30
  */
@@ -12,14 +13,33 @@
 
 using namespace std;
 
+const string EXPECTED_FORMAT = "\"./check ../tests/test.txt ../tests/dictionary.txt balanced_tree.txt\"";
+
+/**
+ * @brief Check if the provided program arguments are valid.
+ *
+ * @param argc Number of command-line arguments.
+ * @param expected_num_args The expected number of arguments.
+ * @param argv Array of command-line argument strings.
+ * @param expected_format The expected format of program arguments.
+ * @return True if arguments are valid, false otherwise.
+ */
 bool valid_arguments(int argc, int expected_num_args, char* argv[], const string& expected_format);
 
+/**
+ * @brief The main entry point of the program.
+ *
+ * This function parses command-line arguments, initializes data structures, and performs
+ * spell checking using a balanced binary search tree (BST).
+ *
+ * @param argc Number of command-line arguments.
+ * @param argv Array of command-line argument strings.
+ * @return 0 on successful execution, 1 on failure.
+ */
 int main(int argc, char* argv[]) {
 
     // determine if the right number of program arguments were provided/ all are in the correct format
-    string expected_format = "\"./check ../tests/test.txt ../tests/dictionary.txt balanced_tree.txt\"";
-
-    if (!valid_arguments(argc, 4, argv, expected_format)) {
+    if (!valid_arguments(argc, 4, argv, EXPECTED_FORMAT)) {
         return 1;
     }
 
@@ -37,27 +57,14 @@ int main(int argc, char* argv[]) {
 
     // see how long it took to build/ balance the bst
     cout << "Dictionary built and balanced in " << dictionary.get_elapsed_time() << " ms." << endl;
-    cout << "\n"; // for nice formatting
 
     // save a representation of the bst to a file for review
     dictionary.save_to_file(balanced_tree_output_path);
 
-    // initialize spell checker with the provided dictionary
+    // Create and use a spell checker with the provided dictionary
     SpellChecker spell_checker(dictionary);
-
-    // run the spell check and provide details of the outcome
-    if (spell_checker.run_check(sample_text_path)) {
-        cout << "\n";
-        cout << GREEN << "No spelling errors detected." << RESET << endl;
-
-    } else {
-        cout << "\n";
-        cout << RED << "Spelling errors detected!" << RESET << std::endl;
-
-//        for (auto& word : spell_checker.get_misspelled_words()) {
-//            cout << word << endl;
-//        }
-    }
+    spell_checker.run_check(sample_text_path);
+    spell_checker.print_results();
 
     // print the time elapsed during the spell check
     cout << "\nCheck took " << spell_checker.get_elapsed_time() << " ms." << endl;
@@ -65,10 +72,9 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-// validate program arguments for tree destination, sample, and dictionary files
 bool valid_arguments(int argc, int expected_num_args, char* argv[], const string& expected_format) {
     if (argc != expected_num_args) {
-        cerr << RED << "Wrong number of arguments: expected" << expected_num_args << " but " << argc << "were provided." << RESET << endl;
+        cerr << RED << "Wrong number of arguments: expected " << expected_num_args << " but " << argc << " were provided." << RESET << endl;
         cout << CYAN << "Arguments should resemble " << expected_format << RESET << endl;
 
         return false;
