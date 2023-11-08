@@ -21,22 +21,22 @@
 * @brief BST Nodes contain data and pointers to left and right subtree roots
 */
 template <class T>
-class Node {
+class BSTNode {
 public:
     T m_data; // the data stored in the node
-    Node* m_left; // pointer to left child
-    Node* m_right; // pointer to right child
-    int m_height; // the height of the node relative to the root of the tree
+    BSTNode* m_left; // pointer to left child
+    BSTNode* m_right; // pointer to right child
 
-    explicit Node(T data) : m_data(data), m_left(nullptr), m_right(nullptr), m_height(1) {}
+    explicit BSTNode(T data) : m_data(data), m_left(nullptr), m_right(nullptr) {}
 };
 
 /**
  * @class BST
  * @brief A class template for Binary Search Tree (BST).
  * @tparam T The type of data to be stored in the BST.
+ * @tparam NodeT The type of node to use (BSTNode by default)
  */
-template <class T>
+template <class T, typename NodeT = BSTNode<T>>
 class BST {
 public:
     /**
@@ -82,9 +82,9 @@ public:
      * @return The data that was deemed the closest match
      */
     T find_closest_value(T data) {
-        Node<T>* closest_match = nullptr;
+        NodeT* closest_match = nullptr;
         int starting_distance = std::numeric_limits<int>::max();
-        Node<T>* closest_node = find_closest_value(data, m_root, closest_match, starting_distance);
+        NodeT* closest_node = find_closest_value(data, m_root, closest_match, starting_distance);
 
         return closest_node->m_data;
     }
@@ -127,7 +127,7 @@ public:
     }
 
 protected:
-    Node<T>* m_root; // pointer to root node of the entire tree
+    NodeT* m_root; // pointer to root node of the entire tree
 
     /**
      * @brief Recursively search for data in the BST.
@@ -136,7 +136,7 @@ protected:
      * @param node The current node being searched.
      * @return A pointer to the node where the data was found, or nullptr if not found.
      */
-    Node<T>* find(const T data, Node<T>* node) {
+    NodeT* find(const T data, NodeT* node) {
         if (!node || data == node->m_data) {
             // either reached the end without finding data, or it's present at the current node
             return node;
@@ -159,7 +159,7 @@ protected:
      * @param closest_match The closest matching node found so far.
      * @return A pointer to the closest matching node.
      */
-    Node<T>* find_closest_value(T given_value, Node<T>* node, Node<T>*& closest_match, int& min_difference) {
+    NodeT* find_closest_value(T given_value, NodeT* node, NodeT*& closest_match, int& min_difference) {
         if (!node) {
             // Reached the end without finding the value, return the last closest match
             return closest_match;
@@ -196,7 +196,7 @@ protected:
      * @param node The current node being printed.
      * @param indent The current indentation- will be smallest for root node, largest for leaf nodes.
      */
-    void print_tree(std::ostream& output, Node<T>*& node, int indent) {
+    void print_tree(std::ostream& output, NodeT*& node, int indent) {
         if (node) {
             print_tree(output, node->m_right, indent + 15);
             output << std::setw(indent) << node->m_data << std::endl;
@@ -220,7 +220,7 @@ protected:
      * @param node The starting node for the search.
      * @return A pointer to the node with the minimum value.
      */
-    Node<T>* find_min(Node<T>* node) {
+    NodeT* find_min(NodeT* node) {
         while (node->m_left) {
             node = std::move(node->m_left);
         }
@@ -238,7 +238,7 @@ protected:
     * @param node A reference to the current node being searched for that data.
     * @return A pointer to the node that took the place of the deleted node.
     */
-    Node<T>* remove(const T data, Node<T>*& node) {
+    NodeT* remove(const T data, NodeT*& node) {
         if (data < node->m_data) {
             // data might be found along the left branch
             node-> m_left = remove(data, node->m_left);
@@ -251,20 +251,19 @@ protected:
             // have reached the desired node to delete
             if (!node->m_right) {
                 // node only has left child
-                Node<T>* temp = node->m_left;
+                NodeT* temp = node->m_left;
                 free(node);
                 return temp;
 
             } else if (!node->m_left) {
                 // Node only has right child
-                Node<T>* temp = node->m_right;
+                NodeT* temp = node->m_right;
                 free(node);
                 return temp;
             }
 
             // node has two children
-            // always replace with right side + don't keep track of parent
-            Node<T>* temp = find_min(node->m_right);
+            NodeT* temp = find_min(node->m_right);
             node->m_data = temp->m_data;
             node->m_right = remove(node->m_data, node->m_right);
         }
@@ -278,10 +277,10 @@ protected:
      * @param data The data to be inserted into the BST.
      * @param node A reference to the current node in the BST.
      */
-    Node<T>* insert(const T data, Node<T>*& node) {
+    NodeT* insert(const T data, NodeT*& node) {
         if (!node) {
             // reached the bottom of the tree
-            return new Node<T>(data);
+            return new NodeT(data);
 
         } else if (data < node->m_data) {
             // left leaf

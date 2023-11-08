@@ -7,25 +7,71 @@
 
 #include "bst.h"
 
+/**
+ * @class AVLNode
+ * @brief Represents a node in the AVL tree.
+ * @tparam T The type of data stored in the node.
+ * @note Differs from BST node due to height factor
+ */
 template <class T>
-class AVL : public BST<T> {
+class AVLNode {
 public:
+    T m_data; // the data stored in the node
+    AVLNode* m_left; // pointer to left child
+    AVLNode* m_right; // pointer to right child
+    int m_height; // the height of the node relative to the end of the tree
+
+    /**
+    * @brief Constructs an AVLNode with the given data.
+    * @param data The data to store in the node.
+    */
+    explicit AVLNode(T data) : m_data(data), m_left(nullptr), m_right(nullptr), m_height(1) {}
+};
+
+/**
+ * @class AVL
+ * @brief Represents an AVL tree, a self-balancing binary search tree.
+ * @tparam T The type of data stored in the tree.
+ */
+template <class T>
+class AVL : public BST<T, AVLNode<T>> {
+public:
+    /**
+     * @brief Inserts a new element with the specified data into the AVL tree.
+     * @param data The data to be inserted.
+     */
     void insert(T data) {
         this-> m_root = insert(data, this->m_root);
     }
 
 private:
-    int get_height(Node<T>* node) {
+    /**
+     * @brief Get the height of a node.
+     * @param node The node for which to get the height.
+     * @return The height of the node or -1 if the node is nullptr.
+     */
+    int get_height(AVLNode<T>* node) {
         return node ? node->m_height : -1;
     }
 
-    int get_balance(Node<T>* node) {
+    /**
+     * @brief Get the balance factor of a node.
+     * @param node The node for which to calculate the balance factor.
+     * @return The balance factor (difference in heights of left and right subtrees).
+     */
+    int get_balance(AVLNode<T>* node) {
         return node ? (get_height(node->m_left) - get_height(node->m_right)) : 0;
     }
 
-    Node<T>* rotate_right(Node<T>* y) {
-        Node<T>* x = y->m_left;
-        Node<T>* T2 = x->m_right;
+    /**
+     * @brief Perform a right rotation on the given node.
+     * @param y The node to be rotated.
+     * @return The new root of the subtree after rotation.
+     * @note Used when the tree is left-heavy
+     */
+    AVLNode<T>* rotate_right(AVLNode<T>* y) {
+        AVLNode<T>* x = y->m_left;
+        AVLNode<T>* T2 = x->m_right;
 
         // Perform rotation
         x->m_right = y;
@@ -41,10 +87,16 @@ private:
         return x;
     }
 
-    Node<T>* rotate_left(Node<T>* x)
+    /**
+     * @brief Perform a left rotation on the given node.
+     * @param x The node to be rotated.
+     * @return The new root of the subtree after rotation.
+     * @note Used when the tree is right-heavy
+     */
+    AVLNode<T>* rotate_left(AVLNode<T>* x)
     {
-        Node<T>* y = x->m_right;
-        Node<T>* T2 = y->m_left;
+        AVLNode<T>* y = x->m_right;
+        AVLNode<T>* T2 = y->m_left;
 
         // Perform rotation
         y->m_left = x;
@@ -61,8 +113,15 @@ private:
         return y;
     }
 
-    Node<T>* insert(const T data, Node<T>*& node) {
-        node = BST<T>::insert(data, node);
+    /**
+     * @brief Insert a new element with the specified data into the AVL tree.
+     * @param data The data to be inserted.
+     * @param node The current node in the AVL tree.
+     * @return The new root of the subtree after insertion and balancing.
+     */
+    AVLNode<T>* insert(const T data, AVLNode<T>*& node) {
+        // perform normal BST insert
+        node = BST<T, AVLNode<T>>::insert(data, node);
 
         // update height of this node
         node->m_height = 1 + std::max(get_height(node->m_left), get_height(node->m_right));
