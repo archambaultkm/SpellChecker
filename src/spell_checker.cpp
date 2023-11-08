@@ -22,7 +22,6 @@ long SpellChecker::get_elapsed_time() {
 }
 
 void SpellChecker::run_check(const std::string& sample_file_path) {
-
     std::vector<std::string> words_to_check = get_vec_from_file(sample_file_path);
 
     // start the timer

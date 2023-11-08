@@ -7,13 +7,29 @@
  * This file contains the definition of a Binary Search Tree (BST) class template.
  */
 
-#ifndef ASSIGNMENT_3_BINARY_SEARCH_TREE_H
-#define ASSIGNMENT_3_BINARY_SEARCH_TREE_H
+#ifndef ASSIGNMENT_3_BST_H
+#define ASSIGNMENT_3_BST_H
 
 #include "utils.h"
 
 #include <iomanip>
 #include <iostream>
+
+/**
+* @class Node
+* @tparam T the type of data to store in the node
+* @brief BST Nodes contain data and pointers to left and right subtree roots
+*/
+template <class T>
+class Node {
+public:
+    T m_data; // the data stored in the node
+    Node* m_left; // pointer to left child
+    Node* m_right; // pointer to right child
+    int m_height; // the height of the node relative to the root of the tree
+
+    explicit Node(T data) : m_data(data), m_left(nullptr), m_right(nullptr), m_height(1) {}
+};
 
 /**
  * @class BST
@@ -22,18 +38,96 @@
  */
 template <class T>
 class BST {
-private:
+public:
     /**
-     * @struct Node
-     * @brief BST Nodes contain data and pointers to left and right subtree roots
+     * @brief Default constructor.
      */
-    struct Node {
-        T m_data; // the data stored in the node
-        Node* m_left; // pointer to left subtree root
-        Node* m_right; // pointer to right subtree root
+    BST() {
+        m_root = nullptr;
     };
 
-    Node* m_root; // pointer to root node of the entire tree
+    /**
+     * @brief Destructor removes each node in the tree.
+     */
+    virtual ~BST() {
+        if (m_root) {
+            remove(m_root->m_data);
+            delete m_root;
+        }
+        m_root = nullptr;
+    }
+
+    /**
+     * @brief Entry point to recursive find()
+     *
+     * @param data The data to search for in the BST
+     */
+    bool find(T data) {
+        return (find(data, m_root) != nullptr);
+    }
+
+    /**
+     * @brief Check if the BST contains any data
+     *
+     * @return True if root node is null, false otherwise
+     */
+    bool is_empty() {
+        return m_root == nullptr;
+    }
+
+    /**
+     * @brief Entry point to recursive find_closest_value()
+     *
+     * @param data The data to find an approximate match for
+     * @return The data that was deemed the closest match
+     */
+    T find_closest_value(T data) {
+        Node<T>* closest_match = nullptr;
+        int starting_distance = std::numeric_limits<int>::max();
+        Node<T>* closest_node = find_closest_value(data, m_root, closest_match, starting_distance);
+
+        return closest_node->m_data;
+    }
+
+    /**
+     * @brief Entry point to recursive remove()
+     *
+     * @param data The data to remove
+     */
+    void remove(T data) {
+        remove(data, m_root);
+    }
+
+    virtual /**
+     * @brief Entry point to recursive insert()
+     *
+     * @param data The data to insert
+     */
+    void insert(T data) {
+        m_root = insert(data, m_root);
+    }
+
+    /**
+     * @brief Entry point to recursive build_balanced()
+     *
+     * @param sorted_list the sorted vector of information to turn into a tree
+     */
+    void build_balanced(std::vector<T> sorted_list) {
+        build_balanced(sorted_list, 0, sorted_list.size() - 1);
+    }
+
+    /**
+     * @brief Entry point to recursive print_tree()
+     *
+     * @param output The output stream where the tree will be printed.
+     * @param indent The starting indentation.
+     */
+    void print_tree(std::ostream& output, int indent) {
+        print_tree(output, m_root, indent);
+    }
+
+protected:
+    Node<T>* m_root; // pointer to root node of the entire tree
 
     /**
      * @brief Recursively search for data in the BST.
@@ -42,7 +136,7 @@ private:
      * @param node The current node being searched.
      * @return A pointer to the node where the data was found, or nullptr if not found.
      */
-    Node* find(const T data, Node* node) {
+    Node<T>* find(const T data, Node<T>* node) {
         if (!node || data == node->m_data) {
             // either reached the end without finding data, or it's present at the current node
             return node;
@@ -65,7 +159,7 @@ private:
      * @param closest_match The closest matching node found so far.
      * @return A pointer to the closest matching node.
      */
-    Node* find_closest_value(T given_value, Node* node, Node*& closest_match, int& min_difference) {
+    Node<T>* find_closest_value(T given_value, Node<T>* node, Node<T>*& closest_match, int& min_difference) {
         if (!node) {
             // Reached the end without finding the value, return the last closest match
             return closest_match;
@@ -102,7 +196,7 @@ private:
      * @param node The current node being printed.
      * @param indent The current indentation- will be smallest for root node, largest for leaf nodes.
      */
-    void print_tree(std::ostream& output, Node*& node, int indent) {
+    void print_tree(std::ostream& output, Node<T>*& node, int indent) {
         if (node) {
             print_tree(output, node->m_right, indent + 15);
             output << std::setw(indent) << node->m_data << std::endl;
@@ -126,7 +220,7 @@ private:
      * @param node The starting node for the search.
      * @return A pointer to the node with the minimum value.
      */
-    Node* find_min(Node* node) {
+    Node<T>* find_min(Node<T>* node) {
         while (node->m_left) {
             node = std::move(node->m_left);
         }
@@ -144,7 +238,7 @@ private:
     * @param node A reference to the current node being searched for that data.
     * @return A pointer to the node that took the place of the deleted node.
     */
-    Node* remove(const T data, Node*& node) {
+    Node<T>* remove(const T data, Node<T>*& node) {
         if (data < node->m_data) {
             // data might be found along the left branch
             node-> m_left = remove(data, node->m_left);
@@ -157,20 +251,20 @@ private:
             // have reached the desired node to delete
             if (!node->m_right) {
                 // node only has left child
-                Node* temp = node->m_left;
+                Node<T>* temp = node->m_left;
                 free(node);
                 return temp;
 
             } else if (!node->m_left) {
                 // Node only has right child
-                Node* temp = node->m_right;
+                Node<T>* temp = node->m_right;
                 free(node);
                 return temp;
             }
 
             // node has two children
             // always replace with right side + don't keep track of parent
-            Node* temp = find_min(node->m_right);
+            Node<T>* temp = find_min(node->m_right);
             node->m_data = temp->m_data;
             node->m_right = remove(node->m_data, node->m_right);
         }
@@ -178,27 +272,31 @@ private:
         return node;
     }
 
-    /**
+    virtual /**
      * @brief Recursively attempt to insert a node at the appropriate spot in an existing tree.
      *
      * @param data The data to be inserted into the BST.
      * @param node A reference to the current node in the BST.
      */
-    void insert(const T data, Node*& node) {
+    Node<T>* insert(const T data, Node<T>*& node) {
         if (!node) {
             // reached the bottom of the tree
-            node = new Node();
-            node-> m_data = data;
+            return new Node<T>(data);
 
         } else if (data < node->m_data) {
             // left leaf
-            insert(data, node-> m_left);
+            node->m_left = insert(data, node->m_left);
 
         } else if (data > node->m_data) {
             // right leaf
-            insert(data, node-> m_right);
+            node->m_right = insert(data, node-> m_right);
 
+        } else {
+            // no duplicate values
+            return node;
         }
+
+        return node;
     }
 
     /**
@@ -223,91 +321,5 @@ private:
         // branch right
         build_balanced(sorted_list, midpoint+1, right_bound);
     }
-
-public:
-    /**
-     * @brief Default constructor.
-     */
-    BST() {
-        m_root = nullptr;
-    };
-
-    /**
-     * @brief Destructor removes each node in the tree.
-     */
-    virtual ~BST() {
-        remove(m_root->m_data);
-        delete m_root;
-        m_root = nullptr;
-    }
-
-    /**
-     * @brief Entry point to recursive find()
-     *
-     * @param data The data to search for in the BST
-     */
-    bool find(T data) {
-        return (find(data, m_root) != nullptr);
-    }
-
-    /**
-     * @brief Check if the BST contains any data
-     *
-     * @return True if root node is null, false otherwise
-     */
-    bool is_empty() {
-        return m_root == nullptr;
-    }
-
-    /**
-     * @brief Entry point to recursive find_closest_value()
-     *
-     * @param data The data to find an approximate match for
-     * @return The data that was deemed the closest match
-     */
-    T find_closest_value(T data) {
-        Node* closest_match = nullptr;
-        int starting_distance = std::numeric_limits<int>::max();
-        Node* closest_node = find_closest_value(data, m_root, closest_match, starting_distance);
-
-        return closest_node->m_data;
-    }
-
-    /**
-     * @brief Entry point to recursive remove()
-     *
-     * @param data The data to remove
-     */
-    void remove(T data) {
-        remove(data, m_root);
-    }
-
-    /**
-     * @brief Entry point to recursive insert()
-     *
-     * @param data The data to insert
-     */
-    void insert(T data) {
-        insert(data, m_root);
-    }
-
-    /**
-     * @brief Entry point to recursive build_balanced()
-     *
-     * @param sorted_list the sorted vector of information to turn into a tree
-     */
-    void build_balanced(std::vector<T> sorted_list) {
-        build_balanced(sorted_list, 0, sorted_list.size() - 1);
-    }
-
-    /**
-     * @brief Entry point to recursive print_tree()
-     *
-     * @param output The output stream where the tree will be printed.
-     * @param indent The starting indentation.
-     */
-    void print_tree(std::ostream& output, int indent) {
-        print_tree(output, m_root, indent);
-    }
 };
-#endif //ASSIGNMENT_3_BINARY_SEARCH_TREE_H
+#endif //ASSIGNMENT_3_BST_H

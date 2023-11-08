@@ -6,6 +6,7 @@
  */
 #include "inc/utils.h"
 #include "inc/spell_checker.h"
+#include "inc/avl.h"
 #include "inc/colours.h"
 
 #include <iostream>
@@ -68,6 +69,16 @@ int main(int argc, char* argv[]) {
 
     // print the time elapsed during the spell check
     cout << "\nCheck took " << spell_checker.get_elapsed_time() << " ms." << endl;
+
+    // TODO just testing avl, remove
+    AVL<string> avl;
+    vector<string> dic_words = get_vec_from_file(dictionary_path);
+
+    for (auto& word : dic_words) {
+        avl.insert(word);
+    }
+
+    cout << avl;
 
     return 0;
 }

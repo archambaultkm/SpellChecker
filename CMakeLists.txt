@@ -5,21 +5,25 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_executable(Assignment_3
         main.cpp
-        inc/binary_search_tree.h
+        inc/bst.h
         src/dictionary.cpp
         inc/dictionary.h
         src/spell_checker.cpp
         inc/spell_checker.h
         inc/utils.h
         inc/timer.h
-        src/utils.cpp)
+        src/utils.cpp
+        inc/avl.h
+        inc/tree_node.h)
 add_executable(check
         main.cpp
-        inc/binary_search_tree.h
+        inc/bst.h
         src/dictionary.cpp
         inc/dictionary.h
         src/spell_checker.cpp
         inc/spell_checker.h
         inc/utils.h
         inc/timer.h
-        src/utils.cpp)
+        src/utils.cpp
+        inc/avl.h
+        inc/tree_node.h)

@@ -8,7 +8,7 @@
 #ifndef ASSIGNMENT_3_DICTIONARY_H
 #define ASSIGNMENT_3_DICTIONARY_H
 
-#include "binary_search_tree.h"
+#include "bst.h"
 #include "timer.h"
 
 #include <vector>

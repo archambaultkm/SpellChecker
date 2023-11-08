@@ -52,7 +52,6 @@ std::vector<std::string> get_vec_from_file(const std::string& file_path) {
 }
 
 bool is_valid_file_path(const std::string &provided_file_path, std::string extension) {
-
     // create a string for a file path using the desired extension
     std::string extension_regex = extension.empty() ? "" : ("\\." + extension);
     std::string path_regex = R"(^(?:..)?\/?(?:[a-zA-Z0-9_-]+[\/])?(?:[a-zA-Z0-9_-]+)" + extension_regex + "$)";
