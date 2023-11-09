@@ -49,7 +49,7 @@ public:
     /**
      * @brief Destructor removes each node in the tree.
      */
-    virtual ~BST() {
+    ~BST() {
         if (m_root) {
             remove(m_root->m_data);
             delete m_root;
@@ -98,12 +98,12 @@ public:
         remove(data, m_root);
     }
 
-    virtual /**
+    /**
      * @brief Entry point to recursive insert()
      *
      * @param data The data to insert
      */
-    void insert(T data) {
+    virtual void insert(T data) {
         m_root = insert(data, m_root);
     }
 
@@ -271,13 +271,13 @@ protected:
         return node;
     }
 
-    virtual /**
+    /**
      * @brief Recursively attempt to insert a node at the appropriate spot in an existing tree.
      *
      * @param data The data to be inserted into the BST.
      * @param node A reference to the current node in the BST.
      */
-    NodeT* insert(const T data, NodeT*& node) {
+    virtual NodeT* insert(const T data, NodeT*& node) {
         if (!node) {
             // reached the bottom of the tree
             return new NodeT(data);

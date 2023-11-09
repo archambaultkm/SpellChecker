@@ -11,10 +11,11 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
 
 using namespace std;
 
-const string EXPECTED_FORMAT = "\"./check ../tests/test.txt ../tests/dictionary.txt balanced_tree.txt\"";
+const string EXPECTED_FORMAT = "\"./check ../tests/test.txt ../tests/dictionary.txt bst_output.txt avl_output.txt\"";
 
 /**
  * @brief Check if the provided program arguments are valid.
@@ -40,45 +41,50 @@ bool valid_arguments(int argc, int expected_num_args, char* argv[], const string
 int main(int argc, char* argv[]) {
 
     // determine if the right number of program arguments were provided/ all are in the correct format
-    if (!valid_arguments(argc, 4, argv, EXPECTED_FORMAT)) {
+    if (!valid_arguments(argc, 5, argv, EXPECTED_FORMAT)) {
         return 1;
     }
 
     // initialize file paths from validated arguments
     string sample_text_path = argv[1];
     string dictionary_path = argv[2];
-    string balanced_tree_output_path = argv[3];
+    string bst_output_path = argv[3];
+    string avl_output_path = argv[4];
 
     // initialize dictionary and validate that it contains data
-    Dictionary dictionary(dictionary_path);
-    if (dictionary.is_empty()) {
+    Dictionary<BST<string>> bst_dictionary(dictionary_path);
+    Dictionary<AVL<string>> avl_dictionary(dictionary_path);
+
+    if (bst_dictionary.is_empty() || avl_dictionary.is_empty()) {
         cerr << RED << "Error: the provided dictionary was empty. Check the file path and try again." << RESET << endl;
         return 1;
     }
 
     // see how long it took to build/ balance the bst
-    cout << "Dictionary built and balanced in " << dictionary.get_elapsed_time() << " ms." << endl;
+    cout << "BST Dictionary built and balanced in " << bst_dictionary.get_elapsed_time() << " ms." << endl;
 
-    // save a representation of the bst to a file for review
-    dictionary.save_to_file(balanced_tree_output_path);
+    // see how long it took to build/ balance the avl
+    cout << "AVL Dictionary built and balanced in " << avl_dictionary.get_elapsed_time() << " ms." << endl;
 
-    // Create and use a spell checker with the provided dictionary
-    SpellChecker spell_checker(dictionary);
-    spell_checker.run_check(sample_text_path);
-    spell_checker.print_results();
+    // save each tree to a file for review
+    bst_dictionary.save_to_file(bst_output_path);
+    avl_dictionary.save_to_file(avl_output_path);
 
-    // print the time elapsed during the spell check
-    cout << "\nCheck took " << spell_checker.get_elapsed_time() << " ms." << endl;
+    cout << "\n";
 
-    // TODO just testing avl, remove
-    AVL<string> avl;
-    vector<string> dic_words = get_vec_from_file(dictionary_path);
+    // Create and use a spell checker with both dictionaries
+    SpellChecker bst_spell_checker(bst_dictionary);
+    bst_spell_checker.run_check(sample_text_path);
+    bst_spell_checker.print_results();
 
-    for (auto& word : dic_words) {
-        avl.insert(word);
-    }
-
-    cout << avl;
+    //TODO avl spell checker doesn't work
+//    // Create and use a spell checker with both dictionaries
+//    SpellChecker avl_spell_checker(avl_dictionary);
+//    avl_spell_checker.run_check(sample_text_path);
+//    avl_spell_checker.print_results();
+//
+//    // print the time elapsed during the spell check
+//    cout << "\nCheck took " << avl_spell_checker.get_elapsed_time() << " ms." << endl;
 
     return 0;
 }

@@ -1,6 +1,11 @@
-//
-// Created by Kaitlyn Archambault on 2023-11-08.
-//
+/**
+ * @file AVL.h
+ * @brief An AVL tree implementation.
+ * @author Kaitlyn Archambault
+ * @date 2023-11-08
+ *
+ * This file contains the definition of an AVL tree class template.
+ */
 
 #ifndef ASSIGNMENT_3_AVL_H
 #define ASSIGNMENT_3_AVL_H
