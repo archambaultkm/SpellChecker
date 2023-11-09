@@ -19,7 +19,7 @@
  */
 class SpellChecker {
 private:
-    Dictionary<> m_dictionary; // BST containing correctly-spelled words
+    Dictionary m_dictionary; // Tree containing correctly-spelled words
     std::vector<std::string> m_misspelled_words; // list of misspelled words found during last check
     Timer<> m_timer; // timer using template default (chrono high resolution clock)
 
@@ -29,7 +29,7 @@ public:
      *
      * @param dictionary The dictionary to use for spell checking.
      */
-    explicit SpellChecker(const Dictionary<>& dictionary);
+    explicit SpellChecker(const Dictionary& dictionary);
 
     /**
      * @brief Get a vector of misspelled words found during the last spell check.

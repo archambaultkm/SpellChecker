@@ -10,7 +10,7 @@
 
 #include <utility>
 
-SpellChecker::SpellChecker(const Dictionary<>& dictionary) : m_dictionary(dictionary)
+SpellChecker::SpellChecker(const Dictionary& dictionary) : m_dictionary(dictionary)
 { }
 
 std::vector<std::string> SpellChecker::get_misspelled_words() {
