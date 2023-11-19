@@ -9,7 +9,6 @@
 #define ASSIGNMENT_3_DICTIONARY_H
 
 #include "bst.h"
-#include "avl.h"
 #include "timer.h"
 
 #include <vector>
@@ -19,13 +18,29 @@
 
 /**
  * @class Dictionary
- * @brief An extension of a BST that reads a list of strings from a file and builds a balanced tree.
+ * @brief An extension of a BST that includes file i/o functionality.
  */
 class Dictionary : public BST<std::string> {
-protected:
+private:
     Timer<> m_timer; // timer using default high-res clock to time building the dictionary
 
+    /**
+     * @brief Recursively build a balanced BST from a sorted list.
+     *
+     * @param sorted_list The sorted list of data to build the balanced BST from.
+     * @param left_bound The left boundary of the current sub-list.
+     * @param right_bound The right boundary of the current sub-list.
+     * @note The initial call should have `left_bound` set to 0 and `right_bound` set to the list's size.
+    */
+    void build_balanced(std::vector<std::string> sorted_list, int left_bound, int right_bound);
+
 public:
+    /**
+     * @brief Using a sorted vector of words from the provided file path,
+     * builds a balanced BST
+     *
+     * @param file_name validated file path for dictionary words
+     */
     explicit Dictionary(const std::string& file_name);
 
     /**
@@ -42,39 +57,5 @@ public:
      */
     void save_to_file(const std::string& file_path);
 };
-
-//// Constructor specialization for AVL tree
-//template <>
-//class Dictionary<AVL<std::string>> : public DictionaryBase<AVL<std::string>> {
-//public:
-//    explicit Dictionary(const std::string& file_name) {
-//        //start the timer
-//        m_timer.start();
-//
-//        // read the file at the provided file path into vector
-//        std::ifstream ifs;
-//        std::string line;
-//
-//        // attempt to open the provided file and read its contents into the tree
-//        try {
-//            ifs.open(file_name, std::fstream::in);
-//
-//            while (getline(ifs, line)) {
-//                // Split the line into words
-//                std::istringstream iss(line);
-//                std::string word;
-//                while (iss >> word) {
-//                    this->insert(word);
-//                }
-//            }
-//
-//        } catch (std::ifstream::failure &e) {
-//            std::cout << "Exception reading file to AVL" << std::endl;
-//        }
-//
-//        //stop the timer
-//        m_timer.stop();
-//    }
-//};
 
 #endif //ASSIGNMENT_3_DICTIONARY_H

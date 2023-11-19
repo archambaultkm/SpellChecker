@@ -13,7 +13,8 @@ add_executable(Assignment_3
         inc/utils.h
         inc/timer.h
         src/utils.cpp
-        inc/avl.h)
+        inc/avl.h
+        inc/node.h)
 add_executable(check
         main.cpp
         inc/bst.h
@@ -24,4 +25,5 @@ add_executable(check
         inc/utils.h
         inc/timer.h
         src/utils.cpp
-        inc/avl.h)
+        inc/avl.h
+        inc/node.h)

@@ -32,13 +32,14 @@ void SpellChecker::run_check(const std::string& sample_file_path) {
         // convert the word to lowercase
         std::transform(word.begin(), word.end(), word.begin(), ::tolower);
 
-        // remove special characters (and continue if the word *only* contained special characters)
+        // remove special characters
         word = remove_non_alpha(word);
         if (empty(word)) {
+            // continue if the word *only* contained special characters
             continue;
         }
 
-        // keep track of any word not found in the dictionary
+        // keep track of any word not found in the dictionary (it is misspelled)
         if (!m_dictionary.find(word)) {
             m_misspelled_words.push_back(word);
         }
@@ -54,6 +55,7 @@ void SpellChecker::print_results() {
 
     } else {
         std::cout << RED << "Spelling errors detected!" << RESET << std::endl;
+        // if the spell checker found errors, print out the word and a suggestion
         for (auto& word : m_misspelled_words) {
             std::cout << word << " -> did you mean \"" << m_dictionary.find_closest_value(word) << "\"?" << std::endl;
         }

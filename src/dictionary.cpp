@@ -14,11 +14,12 @@ Dictionary::Dictionary(const std::string& file_name) {
     //start the timer
     m_timer.start();
 
-    // build a balanced BST using a list from file
+    // get a list of words from file
     std::vector<std::string> ordered_list = get_vec_from_file(file_name);
-    //  make sure it's in alphabetical order
+    // make sure it's in alphabetical order
     std::sort(ordered_list.begin(), ordered_list.end());
-    build_balanced(ordered_list);
+    // build a balanced bst
+    build_balanced(ordered_list, 0, ordered_list.size() - 1);
 
     // stop the timer
     m_timer.stop();
@@ -44,4 +45,20 @@ void Dictionary::save_to_file(const std::string& file_path) {
     }
 
     std::cout << "Visualization of dictionary saved to " << file_path << std::endl;
+}
+
+
+void Dictionary::build_balanced(std::vector<std::string> sorted_list, int left_bound, int right_bound) {
+    if (left_bound > right_bound) {
+        return; //means that list has been depleted
+    }
+
+    int midpoint = (left_bound+right_bound) / 2;
+
+    // insert new subtree root
+    insert(sorted_list.at(midpoint));
+    // branch left
+    build_balanced(sorted_list, left_bound, midpoint-1);
+    // branch right
+    build_balanced(sorted_list, midpoint+1, right_bound);
 }

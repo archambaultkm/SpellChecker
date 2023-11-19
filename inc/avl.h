@@ -49,6 +49,10 @@ public:
         this-> m_root = insert(data, this->m_root);
     }
 
+    void remove(T data) {
+        this-> m_root = remove(data, this->m_root);
+    }
+
 private:
     /**
      * @brief Get the height of a node.
@@ -127,6 +131,50 @@ private:
     AVLNode<T>* insert(const T data, AVLNode<T>*& node) {
         // perform normal BST insert
         node = BST<T, AVLNode<T>>::insert(data, node);
+
+        // update height of this node
+        node->m_height = 1 + std::max(get_height(node->m_left), get_height(node->m_right));
+
+        // get the balance factor of this node to see if it is unbalanced
+        int balance = get_balance(node);
+
+        // Left Left Case
+        if (balance > 1 && data < node->m_left->m_data)
+            return rotate_right(node);
+
+        // Right Right Case
+        if (balance < -1 && data > node->m_right->m_data)
+            return rotate_left(node);
+
+        // Left Right Case
+        if (balance > 1 && data > node->m_left->m_data)
+        {
+            node->m_left = rotate_left(node->m_left);
+            return rotate_right(node);
+        }
+
+        // Right Left Case
+        if (balance < -1 && data < node->m_right->m_data)
+        {
+            node->m_right = rotate_right(node->m_right);
+            return rotate_left(node);
+        }
+
+        return node;
+    }
+
+    AVLNode<T>* remove(const T data, AVLNode<T>*& node) {
+        if (node == nullptr) {
+            return node;
+        }
+
+        // Perform normal BST delete
+        node = BST<T, AVLNode<T>>::remove(data, node);
+
+        // If the tree had only one node, return
+        if (node == nullptr) {
+            return node;
+        }
 
         // update height of this node
         node->m_height = 1 + std::max(get_height(node->m_left), get_height(node->m_right));

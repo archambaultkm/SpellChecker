@@ -16,7 +16,7 @@
 #include <iostream>
 
 /**
-* @class Node
+* @class BSTNode
 * @tparam T the type of data to store in the node
 * @brief BST Nodes contain data and pointers to left and right subtree roots
 */
@@ -94,7 +94,7 @@ public:
      *
      * @param data The data to remove
      */
-    void remove(T data) {
+    virtual void remove(T data) {
         remove(data, m_root);
     }
 
@@ -105,15 +105,6 @@ public:
      */
     virtual void insert(T data) {
         m_root = insert(data, m_root);
-    }
-
-    /**
-     * @brief Entry point to recursive build_balanced()
-     *
-     * @param sorted_list the sorted vector of information to turn into a tree
-     */
-    void build_balanced(std::vector<T> sorted_list) {
-        build_balanced(sorted_list, 0, sorted_list.size() - 1);
     }
 
     /**
@@ -238,7 +229,7 @@ protected:
     * @param node A reference to the current node being searched for that data.
     * @return A pointer to the node that took the place of the deleted node.
     */
-    NodeT* remove(const T data, NodeT*& node) {
+    virtual NodeT* remove(const T data, NodeT*& node) {
         if (data < node->m_data) {
             // data might be found along the left branch
             node-> m_left = remove(data, node->m_left);
@@ -296,30 +287,6 @@ protected:
         }
 
         return node;
-    }
-
-private:
-    /**
-     * @brief Recursively build a balanced BST from a sorted list.
-     *
-     * @param sorted_list The sorted list of data to build the balanced BST from.
-     * @param left_bound The left boundary of the current sub-list.
-     * @param right_bound The right boundary of the current sub-list.
-     * @note The initial call should have `left_bound` set to 0 and `right_bound` set to the list's size.
-    */
-    void build_balanced(std::vector<T> sorted_list, int left_bound, int right_bound){
-        if (left_bound > right_bound) {
-            return; //means that list has been depleted
-        }
-
-        int midpoint = (left_bound+right_bound) / 2;
-
-        // insert new subtree root
-        insert(sorted_list.at(midpoint));
-        // branch left
-        build_balanced(sorted_list, left_bound, midpoint-1);
-        // branch right
-        build_balanced(sorted_list, midpoint+1, right_bound);
     }
 };
 #endif //ASSIGNMENT_3_BST_H
