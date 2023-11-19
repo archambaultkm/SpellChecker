@@ -14,7 +14,7 @@ Dictionary::Dictionary(const std::string& file_name) {
     //start the timer
     m_timer.start();
 
-    // build a balanced BST using an ordered list
+    // build a balanced BST using a list from file
     std::vector<std::string> ordered_list = get_vec_from_file(file_name);
     //  make sure it's in alphabetical order
     std::sort(ordered_list.begin(), ordered_list.end());

@@ -20,12 +20,12 @@
 * @tparam T the type of data to store in the node
 * @brief BST Nodes contain data and pointers to left and right subtree roots
 */
-template <class T>
+template<class T>
 class BSTNode {
 public:
     T m_data; // the data stored in the node
-    BSTNode* m_left; // pointer to left child
-    BSTNode* m_right; // pointer to right child
+    BSTNode *m_left; // pointer to left child
+    BSTNode *m_right; // pointer to right child
 
     explicit BSTNode(T data) : m_data(data), m_left(nullptr), m_right(nullptr) {}
 };
@@ -298,6 +298,7 @@ protected:
         return node;
     }
 
+private:
     /**
      * @brief Recursively build a balanced BST from a sorted list.
      *

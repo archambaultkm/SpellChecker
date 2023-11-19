@@ -23,7 +23,7 @@
  */
 class Dictionary : public BST<std::string> {
 protected:
-    Timer<> m_timer; // timer using default clock to time building the dictionary
+    Timer<> m_timer; // timer using default high-res clock to time building the dictionary
 
 public:
     explicit Dictionary(const std::string& file_name);

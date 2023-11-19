@@ -53,6 +53,8 @@ int main(int argc, char* argv[]) {
     // initialize dictionary and validate that it contains data
     Dictionary dictionary(dictionary_path);
 
+    BSTNode node(0);
+
     if (dictionary.is_empty()) {
         cerr << RED << "Error: the provided dictionary was empty. Check the file path and try again." << RESET << endl;
         return 1;
