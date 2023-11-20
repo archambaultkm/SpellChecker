@@ -11,8 +11,6 @@
 #include "dictionary.h"
 #include "timer.h"
 
-#include <memory>
-
 /**
  * @class SpellChecker
  * @brief Uses a dictionary and a sample file to check for misspelled words.

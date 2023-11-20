@@ -14,8 +14,6 @@
 
 #include <vector>
 #include <string>
-#include <sstream>
-#include <fstream>
 
 /**
  * @class Dictionary
@@ -49,10 +47,28 @@ public:
      */
     void save_to_file(const std::string& file_path);
 
+    /**
+     * @brief see if a word exists in the dictionary's search tree
+     *
+     * @param data the word to find
+     * @return true if the word can be found, false if not
+     */
     bool find(std::string data);
 
+    /**
+     * @brief find the closest word in the dictionary's search tree
+     *
+     * @param data the word to find a suggestion for
+     * @return std::string
+     * @note not accurate
+     */
     std::string find_closest_value(std::string data);
 
+    /**
+     * @brief Check if the dictionary is empty
+     *
+     * @return true if empty, false if not
+     */
     bool is_empty();
 };
 

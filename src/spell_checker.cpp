@@ -50,6 +50,8 @@ void SpellChecker::run_check(const std::string& sample_file_path) {
 }
 
 void SpellChecker::print_results() {
+    std::cout << "\nSpell check took " << m_timer.get_elapsed_time() << " ms.\n" << std::endl;
+
     if (empty(m_misspelled_words)) {
         std::cout << GREEN << "No spelling errors detected." << RESET << std::endl;
 

@@ -123,18 +123,12 @@ private:
     }
 
     /**
-     * @brief Insert a new element with the specified data into the AVL tree.
-     * @param data The data to be inserted.
+     * @brief If needed, rotate around the given node to maintain balance in the tree
+     * @param data The data being inserted/deleted.
      * @param node The current node in the AVL tree.
-     * @return The new root of the subtree after insertion and balancing.
+     * @return The new root of the subtree after balancing.
      */
-    AVLNode<T>* insert(const T data, AVLNode<T>*& node) {
-        // perform normal BST insert
-        node = BST<T, AVLNode<T>>::insert(data, node);
-
-        // update height of this node
-        node->m_height = 1 + std::max(get_height(node->m_left), get_height(node->m_right));
-
+    AVLNode<T>* perform_rotations(const T data, AVLNode<T>*& node) {
         // get the balance factor of this node to see if it is unbalanced
         int balance = get_balance(node);
 
@@ -160,7 +154,24 @@ private:
             return rotate_left(node);
         }
 
+        // doesn't need to be rotated
         return node;
+    }
+
+    /**
+     * @brief Insert a new element with the specified data into the AVL tree.
+     * @param data The data to be inserted.
+     * @param node The current node in the AVL tree.
+     * @return The new root of the subtree after insertion and balancing.
+     */
+    AVLNode<T>* insert(const T data, AVLNode<T>*& node) {
+        // perform normal BST insert
+        node = BST<T, AVLNode<T>>::insert(data, node);
+
+        // update height of this node
+        node->m_height = 1 + std::max(get_height(node->m_left), get_height(node->m_right));
+
+        return perform_rotations(data, node);
     }
 
     AVLNode<T>* remove(const T data, AVLNode<T>*& node) {
@@ -175,32 +186,7 @@ private:
         // update height of this node
         node->m_height = 1 + std::max(get_height(node->m_left), get_height(node->m_right));
 
-        // get the balance factor of this node to see if it is unbalanced
-        int balance = get_balance(node);
-
-        // Left Left Case
-        if (balance > 1 && data < node->m_left->m_data)
-            return rotate_right(node);
-
-        // Right Right Case
-        if (balance < -1 && data > node->m_right->m_data)
-            return rotate_left(node);
-
-        // Left Right Case
-        if (balance > 1 && data > node->m_left->m_data)
-        {
-            node->m_left = rotate_left(node->m_left);
-            return rotate_right(node);
-        }
-
-        // Right Left Case
-        if (balance < -1 && data < node->m_right->m_data)
-        {
-            node->m_right = rotate_right(node->m_right);
-            return rotate_left(node);
-        }
-
-        return node;
+        return perform_rotations(data, node);
     }
 };
 

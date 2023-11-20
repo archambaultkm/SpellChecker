@@ -8,13 +8,14 @@
 #include "../inc/dictionary.h"
 
 #include <fstream>
+#include <sstream>
 #include <iostream>
 
 Dictionary::Dictionary(const std::string& file_name, SearchTreeBase<std::string>* tree_ptr) : m_tree(tree_ptr) {
     //start the timer
     m_timer.start();
 
-    // Check if m_tree points to a BST
+    // Check what kind of tree m_tree points to and build the dictionary tree accordingly
     if (auto* bst_ptr = dynamic_cast<BST<std::string>*>(m_tree)) {
         // get a list of words from file
         std::vector<std::string> ordered_list = get_vec_from_file(file_name);
@@ -22,9 +23,8 @@ Dictionary::Dictionary(const std::string& file_name, SearchTreeBase<std::string>
         std::sort(ordered_list.begin(), ordered_list.end());
         // build a balanced bst
         m_tree->build_balanced(ordered_list, 0, (int) ordered_list.size() - 1);
-    }
-    // Check if m_tree points to an AVL
-    else if (auto* avl_ptr = dynamic_cast<AVL<std::string>*>(m_tree)) {
+
+    } else if (auto* avl_ptr = dynamic_cast<AVL<std::string>*>(m_tree)) {
         // read the file at the provided file path into vector
         std::ifstream ifs;
         std::string line;
@@ -51,6 +51,19 @@ Dictionary::Dictionary(const std::string& file_name, SearchTreeBase<std::string>
     m_timer.stop();
 }
 
+
+bool Dictionary::find(std::string data) {
+    return m_tree->find(data);
+}
+
+std::string Dictionary::find_closest_value(std::string data) {
+    return m_tree->find_closest_value(data);
+}
+
+bool Dictionary::is_empty() {
+    return m_tree->is_empty();
+}
+
 long Dictionary::get_elapsed_time() {
     return m_timer.get_elapsed_time();
 }
@@ -73,14 +86,3 @@ void Dictionary::save_to_file(const std::string& file_path) {
     std::cout << "Visualization of dictionary saved to " << file_path << std::endl;
 }
 
-bool Dictionary::find(std::string data) {
-    return m_tree->find(data);
-}
-
-std::string Dictionary::find_closest_value(std::string data) {
-    return m_tree->find_closest_value(data);
-}
-
-bool Dictionary::is_empty() {
-    return m_tree->is_empty();
-}

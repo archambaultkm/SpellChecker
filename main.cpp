@@ -18,10 +18,6 @@ const string EXPECTED_FORMAT = "\"./check ../tests/test.txt ../tests/dictionary.
 /**
  * @brief Check if the provided program arguments are valid.
  *
- * @param argc Number of command-line arguments.
- * @param expected_num_args The expected number of arguments.
- * @param argv Array of command-line argument strings.
- * @param expected_format The expected format of program arguments.
  * @return True if arguments are valid, false otherwise.
  */
 bool valid_arguments(int argc, int expected_num_args, char* argv[], const string& expected_format);
@@ -30,14 +26,11 @@ bool valid_arguments(int argc, int expected_num_args, char* argv[], const string
  * @brief The main entry point of the program.
  *
  * Parse command-line arguments and perform
- * spell checking using a balanced binary search tree (BST).
+ * spell checking using a balanced search tree.
  *
- * @param argc Number of command-line arguments.
- * @param argv Array of command-line argument strings.
  * @return 0 on successful execution, 1 on failure.
  */
 int main(int argc, char* argv[]) {
-
     // determine if the correct number of program arguments were provided/ all are in the correct format
     if (!valid_arguments(argc, 4, argv, EXPECTED_FORMAT)) {
         return 1;
@@ -46,29 +39,29 @@ int main(int argc, char* argv[]) {
     // initialize file paths from validated arguments
     string sample_text_path = argv[1];
     string dictionary_path = argv[2];
-    string bst_output_path = argv[3];
+    string tree_output_path = argv[3];
 
     // make a tree
-    AVL<std::string> avl;
+    // TODO type could be toggled with a command line flag?
+    BST<std::string> tree;
 
     // initialize dictionary and validate that it contains data
-    Dictionary dictionary(dictionary_path, &avl);
+    Dictionary dictionary(dictionary_path, &tree);
     if (dictionary.is_empty()) {
         cerr << RED << "Error: the provided dictionary was empty. Check the file path and try again." << RESET << endl;
         return 1;
     }
 
-    // see how long it took to build/ balance the bst
+    // see how long it took to build/ balance the dictionary
     cout << "Dictionary built and balanced in " << dictionary.get_elapsed_time() << " ms." << endl;
 
-    // save each tree to a file for review
-    dictionary.save_to_file(bst_output_path);
+    // save tree to a file for review
+    dictionary.save_to_file(tree_output_path);
 
-    // Create and use a spell checker with both dictionaries
-    SpellChecker bst_spell_checker(dictionary);
-    bst_spell_checker.run_check(sample_text_path);
-    cout << "\nSpell check took " << bst_spell_checker.get_elapsed_time() << " ms.\n" << endl;
-    bst_spell_checker.print_results();
+    // Create and use a spell checker with the dictionary
+    SpellChecker spell_checker(dictionary);
+    spell_checker.run_check(sample_text_path);
+    spell_checker.print_results();
 
     return 0;
 }
