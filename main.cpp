@@ -41,11 +41,9 @@ int main(int argc, char* argv[]) {
     string dictionary_path = argv[2];
     string tree_output_path = argv[3];
 
-    // make a tree
     // TODO type could be toggled with a command line flag?
-    BST<std::string> tree;
-
     // initialize dictionary and validate that it contains data
+    BST<std::string> tree;
     Dictionary dictionary(dictionary_path, &tree);
     if (dictionary.is_empty()) {
         cerr << RED << "Error: the provided dictionary was empty. Check the file path and try again." << RESET << endl;

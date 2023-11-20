@@ -51,7 +51,6 @@ Dictionary::Dictionary(const std::string& file_name, SearchTreeBase<std::string>
     m_timer.stop();
 }
 
-
 bool Dictionary::find(std::string data) {
     return m_tree->find(data);
 }
@@ -76,7 +75,7 @@ void Dictionary::save_to_file(const std::string& file_path) {
         //overwrite the file completely if it already exists
         ofs.open(file_path, std::fstream::trunc);
 
-        //copy the bst into the file
+        //copy the tree into the file
         m_tree->print_tree(ofs, 5);
 
     } catch (std::ofstream::failure &e) {

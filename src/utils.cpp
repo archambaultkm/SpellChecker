@@ -12,7 +12,6 @@
 #include <sstream>
 
 std::string remove_non_alpha(const std::string& str) {
-
     std::string corrected;
 
     // iterate through each character and only keep it if it's in the alphabet

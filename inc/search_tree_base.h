@@ -7,6 +7,12 @@
 
 #include <iostream>
 
+// TODO figure out a better way to use the actual names of the trees
+enum TreeType {
+    A,
+    B
+};
+
 template<class T>
 class SearchTreeBase {
 public:
