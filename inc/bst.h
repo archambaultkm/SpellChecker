@@ -11,9 +11,11 @@
 #define ASSIGNMENT_3_BST_H
 
 #include "utils.h"
+#include "search_tree_base.h"
 
 #include <iomanip>
 #include <iostream>
+#include <vector>
 
 /**
 * @class BSTNode
@@ -37,7 +39,7 @@ public:
  * @tparam NodeT The type of node to use (BSTNode by default)
  */
 template <class T, typename NodeT = BSTNode<T>>
-class BST {
+class BST : public SearchTreeBase<T> {
 public:
     /**
      * @brief Default constructor.
@@ -94,7 +96,7 @@ public:
      *
      * @param data The data to remove
      */
-    virtual void remove(T data) {
+    void remove(T data) {
         remove(data, m_root);
     }
 
@@ -103,7 +105,7 @@ public:
      *
      * @param data The data to insert
      */
-    virtual void insert(T data) {
+    void insert(T data) {
         m_root = insert(data, m_root);
     }
 
@@ -117,8 +119,117 @@ public:
         print_tree(output, m_root, indent);
     }
 
+    /**
+        * @brief Recursively build a balanced BST from a sorted list.
+        *
+        * @param sorted_list The sorted list of data to build the balanced BST from.
+        * @param left_bound The left boundary of the current sub-list.
+        * @param right_bound The right boundary of the current sub-list.
+        * @note The initial call should have `left_bound` set to 0 and `right_bound` set to the list's size.
+       */
+    void build_balanced(std::vector<T> sorted_list, int left_bound, int right_bound) {
+        if (left_bound > right_bound) {
+            return; //means that list has been depleted
+        }
+
+        int midpoint = (left_bound+right_bound) / 2;
+
+        // insert new subtree root
+        insert(sorted_list.at(midpoint));
+        // branch left
+        build_balanced(sorted_list, left_bound, midpoint-1);
+        // branch right
+        build_balanced(sorted_list, midpoint+1, right_bound);
+    }
+
 protected:
     NodeT* m_root; // pointer to root node of the entire tree
+
+    /**
+     * @brief Recursively attempt to insert a node at the appropriate spot in an existing tree.
+     *
+     * @param data The data to be inserted into the BST.
+     * @param node A reference to the current node in the BST.
+     */
+    virtual NodeT* insert(const T data, NodeT*& node) {
+        if (!node) {
+            // reached the bottom of the tree
+            return new NodeT(data);
+
+        } else if (data < node->m_data) {
+            // left leaf
+            node->m_left = insert(data, node->m_left);
+
+        } else if (data > node->m_data) {
+            // right leaf
+            node->m_right = insert(data, node-> m_right);
+
+        } else {
+            // no duplicate values
+            return node;
+        }
+
+        return node;
+    }
+
+    /**
+     * @brief Find the node with the minimum value in the BST.
+     *
+     * This function tunnels as far left as possible to find the node with the smallest value.
+     *
+     * @param node The starting node for the search.
+     * @return A pointer to the node with the minimum value.
+     */
+    NodeT* find_min(NodeT* node) {
+        while (node->m_left) {
+            node = std::move(node->m_left);
+        }
+
+        return node;
+    }
+
+    /**
+    * @brief Remove a node from the BST.
+    *
+    * This function removes a node with the given data from the BST and handles various cases
+    * (i.e., node with no children, one child, or two children).
+    *
+    * @param data The data to be removed from the BST.
+    * @param node A reference to the current node being searched for that data.
+    * @return A pointer to the node that took the place of the deleted node.
+    */
+    virtual NodeT* remove(const T data, NodeT*& node) {
+        if (data < node->m_data) {
+            // data might be found along the left branch
+            node-> m_left = remove(data, node->m_left);
+
+        } else if (data > node->m_data) {
+            // data might be found along the right branch
+            node-> m_right = remove(data, node->m_right);
+
+        } else {
+            // have reached the desired node to delete
+            if (!node->m_right) {
+                // node only has left child
+                NodeT* temp = node->m_left;
+                free(node);
+                return temp;
+
+            } else if (!node->m_left) {
+                // Node only has right child
+                NodeT* temp = node->m_right;
+                free(node);
+                return temp;
+            }
+
+            // node has two children
+            NodeT* temp = find_min(node->m_right);
+            node->m_data = temp->m_data;
+            node->m_right = remove(node->m_data, node->m_right);
+        }
+
+        return node;
+    }
 
     /**
      * @brief Recursively search for data in the BST.
@@ -203,90 +314,5 @@ protected:
         return output;
     }
 
-    /**
-     * @brief Find the node with the minimum value in the BST.
-     *
-     * This function tunnels as far left as possible to find the node with the smallest value.
-     *
-     * @param node The starting node for the search.
-     * @return A pointer to the node with the minimum value.
-     */
-    NodeT* find_min(NodeT* node) {
-        while (node->m_left) {
-            node = std::move(node->m_left);
-        }
-
-        return node;
-    }
-
-    /**
-    * @brief Remove a node from the BST.
-    *
-    * This function removes a node with the given data from the BST and handles various cases
-    * (i.e., node with no children, one child, or two children).
-    *
-    * @param data The data to be removed from the BST.
-    * @param node A reference to the current node being searched for that data.
-    * @return A pointer to the node that took the place of the deleted node.
-    */
-    virtual NodeT* remove(const T data, NodeT*& node) {
-        if (data < node->m_data) {
-            // data might be found along the left branch
-            node-> m_left = remove(data, node->m_left);
-
-        } else if (data > node->m_data) {
-            // data might be found along the right branch
-            node-> m_right = remove(data, node->m_right);
-
-        } else {
-            // have reached the desired node to delete
-            if (!node->m_right) {
-                // node only has left child
-                NodeT* temp = node->m_left;
-                free(node);
-                return temp;
-
-            } else if (!node->m_left) {
-                // Node only has right child
-                NodeT* temp = node->m_right;
-                free(node);
-                return temp;
-            }
-
-            // node has two children
-            NodeT* temp = find_min(node->m_right);
-            node->m_data = temp->m_data;
-            node->m_right = remove(node->m_data, node->m_right);
-        }
-
-        return node;
-    }
-
-    /**
-     * @brief Recursively attempt to insert a node at the appropriate spot in an existing tree.
-     *
-     * @param data The data to be inserted into the BST.
-     * @param node A reference to the current node in the BST.
-     */
-    virtual NodeT* insert(const T data, NodeT*& node) {
-        if (!node) {
-            // reached the bottom of the tree
-            return new NodeT(data);
-
-        } else if (data < node->m_data) {
-            // left leaf
-            node->m_left = insert(data, node->m_left);
-
-        } else if (data > node->m_data) {
-            // right leaf
-            node->m_right = insert(data, node-> m_right);
-
-        } else {
-            // no duplicate values
-            return node;
-        }
-
-        return node;
-    }
 };
 #endif //ASSIGNMENT_3_BST_H

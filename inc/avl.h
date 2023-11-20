@@ -74,52 +74,52 @@ private:
 
     /**
      * @brief Perform a right rotation on the given node.
-     * @param y The node to be rotated.
+     * @param node The node to be rotated.
      * @return The new root of the subtree after rotation.
      * @note Used when the tree is left-heavy
      */
-    AVLNode<T>* rotate_right(AVLNode<T>* y) {
-        AVLNode<T>* x = y->m_left;
-        AVLNode<T>* T2 = x->m_right;
+    AVLNode<T>* rotate_right(AVLNode<T>* node) {
+        AVLNode<T>* left = node->m_left;
+        AVLNode<T>* temp = left->m_right;
 
         // Perform rotation
-        x->m_right = y;
-        y->m_left = T2;
+        left->m_right = node;
+        node->m_left = temp;
 
         // Update heights
-        y->m_height = std::max(get_height(y->m_left),
-                               get_height(y->m_right)) + 1;
-        x->m_height = std::max(get_height(x->m_left),
-                               get_height(x->m_right)) + 1;
+        node->m_height = std::max(get_height(node->m_left),
+                               get_height(node->m_right)) + 1;
+        left->m_height = std::max(get_height(left->m_left),
+                               get_height(left->m_right)) + 1;
 
         // Return new root
-        return x;
+        return left;
     }
 
     /**
      * @brief Perform a left rotation on the given node.
-     * @param x The node to be rotated.
+     * @param node The node to be rotated.
      * @return The new root of the subtree after rotation.
      * @note Used when the tree is right-heavy
      */
-    AVLNode<T>* rotate_left(AVLNode<T>* x)
+    AVLNode<T>* rotate_left(AVLNode<T>* node)
     {
-        AVLNode<T>* y = x->m_right;
-        AVLNode<T>* T2 = y->m_left;
+        AVLNode<T>* right = node->m_right;
+        AVLNode<T>* temp = right->m_left;
 
         // Perform rotation
-        y->m_left = x;
-        x->m_right = T2;
+        right->m_left = node;
+        node->m_right = temp;
 
         // Update heights
-        x->m_height = std::max(get_height(x->m_left),
-                               get_height(x->m_right)) + 1;
+        node->m_height = std::max(get_height(node->m_left),
+                               get_height(node->m_right)) + 1;
 
-        y->m_height = std::max(get_height(y->m_left),
-                               get_height(y->m_right)) + 1;
+        right->m_height = std::max(get_height(right->m_left),
+                               get_height(right->m_right)) + 1;
 
         // Return new root
-        return y;
+        return right;
     }
 
     /**
@@ -164,11 +164,7 @@ private:
     }
 
     AVLNode<T>* remove(const T data, AVLNode<T>*& node) {
-        if (node == nullptr) {
-            return node;
-        }
-
-        // Perform normal BST delete
+        // Perform normal BST remove
         node = BST<T, AVLNode<T>>::remove(data, node);
 
         // If the tree had only one node, return

@@ -14,7 +14,7 @@ add_executable(Assignment_3
         inc/timer.h
         src/utils.cpp
         inc/avl.h
-        inc/node.h)
+        inc/search_tree_base.h)
 add_executable(check
         main.cpp
         inc/bst.h
@@ -26,4 +26,4 @@ add_executable(check
         inc/timer.h
         src/utils.cpp
         inc/avl.h
-        inc/node.h)
+        inc/search_tree_base.h)
