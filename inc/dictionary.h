@@ -34,6 +34,17 @@ public:
     Dictionary(const std::string& file_name, SearchTreeBase<std::string>* tree_ptr);
 
     /**
+     * @brief Build a dictionary from a file and return it.
+     *
+     * @param dictionary_path The path to the file containing dictionary data.
+     * @param tree_output_path The path to save the binary search tree for review.
+     * @return A Dictionary object representing the built and balanced dictionary.
+     *
+     * @note The function prints the time taken to build and balance the dictionary using cout.
+     */
+    static Dictionary build_and_save(const std::string& dictionary_path, const std::string& tree_output_path);
+
+    /**
     * @brief Get the elapsed time for building the dictionary tree.
     *
     * @return The elapsed time in microseconds.

@@ -49,8 +49,19 @@ public:
         this-> m_root = insert(data, this->m_root);
     }
 
+    /**
+     * @brief Removes data from the tree
+     * @param data The data to be removed.
+     */
     void remove(T data) {
         this-> m_root = remove(data, this->m_root);
+    }
+
+    /**
+     * @brief Create a deep copy of the tree
+     */
+    AVL* clone() const {
+        return new AVL(*this);
     }
 
 private:
@@ -89,6 +100,7 @@ private:
         // Update heights
         node->m_height = std::max(get_height(node->m_left),
                                get_height(node->m_right)) + 1;
+
         left->m_height = std::max(get_height(left->m_left),
                                get_height(left->m_right)) + 1;
 
@@ -132,24 +144,24 @@ private:
         // get the balance factor of this node to see if it is unbalanced
         int balance = get_balance(node);
 
-        // Left Left Case
-        if (balance > 1 && data < node->m_left->m_data)
+        // Single left rotation: the right subtree is higher than the left
+        if (balance > 1 && data < node->m_left->m_data) {
             return rotate_right(node);
+        }
 
-        // Right Right Case
-        if (balance < -1 && data > node->m_right->m_data)
+        // Single right rotation: the left subtree is higher than the right
+        if (balance < -1 && data > node->m_right->m_data) {
             return rotate_left(node);
+        }
 
-        // Left Right Case
-        if (balance > 1 && data > node->m_left->m_data)
-        {
+        // Rotate left and then to the right: Left child has imbalance in both subtrees
+        if (balance > 1 && data > node->m_left->m_data) {
             node->m_left = rotate_left(node->m_left);
             return rotate_right(node);
         }
 
-        // Right Left Case
-        if (balance < -1 && data < node->m_right->m_data)
-        {
+        // Rotate right and then to the left: Right child has imbalance in both subtrees
+        if (balance < -1 && data < node->m_right->m_data) {
             node->m_right = rotate_right(node->m_right);
             return rotate_left(node);
         }
@@ -171,9 +183,16 @@ private:
         // update height of this node
         node->m_height = 1 + std::max(get_height(node->m_left), get_height(node->m_right));
 
+        // re-balance the tree if necessary and return the new subtree root
         return perform_rotations(data, node);
     }
 
+    /**
+     * @brief Remove data from the tree
+     * @param data The data to remove
+     * @param node The current subtree root
+     * @return The new root of the subtree after deletion and balancing.
+     */
     AVLNode<T>* remove(const T data, AVLNode<T>*& node) {
         // Perform normal BST remove
         node = BST<T, AVLNode<T>>::remove(data, node);
@@ -186,6 +205,7 @@ private:
         // update height of this node
         node->m_height = 1 + std::max(get_height(node->m_left), get_height(node->m_right));
 
+        // re-balance the tree if necessary and return the new subtree root
         return perform_rotations(data, node);
     }
 };

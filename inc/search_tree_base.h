@@ -7,12 +7,6 @@
 
 #include <iostream>
 
-// TODO figure out a better way to use the actual names of the trees
-enum TreeType {
-    A,
-    B
-};
-
 template<class T>
 class SearchTreeBase {
 public:
@@ -23,6 +17,7 @@ public:
     virtual T find_closest_value(T data) = 0;
     virtual void print_tree(std::ostream& output, int indent) = 0;
     virtual void build_balanced(std::vector<T> sorted_list, int left_bound, int right_bound) = 0;
+    virtual SearchTreeBase* clone() const = 0;
 };
 
 #endif //ASSIGNMENT_3_SEARCH_TREE_BASE_H

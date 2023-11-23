@@ -60,6 +60,13 @@ public:
     }
 
     /**
+     * @brief Create a deep copy of the tree
+     */
+    BST* clone() const {
+        return new BST(*this);
+    }
+
+    /**
      * @brief Entry point to recursive find()
      *
      * @param data The data to search for in the BST
@@ -142,6 +149,14 @@ public:
         build_balanced(sorted_list, midpoint+1, right_bound);
     }
 
+    /**
+     * @brief Overload of the insertion operator to print the BST to an output stream.
+     */
+    friend std::ostream& operator<<(std::ostream& output, BST& bst){
+        bst.print_tree(output, bst.m_root, 0);
+        return output;
+    }
+
 protected:
     NodeT* m_root; // pointer to root node of the entire tree
 
@@ -212,13 +227,13 @@ protected:
             if (!node->m_right) {
                 // node only has left child
                 NodeT* temp = node->m_left;
-                free(node);
+                delete node;
                 return temp;
 
             } else if (!node->m_left) {
                 // Node only has right child
                 NodeT* temp = node->m_right;
-                free(node);
+                delete node;
                 return temp;
             }
 
@@ -305,14 +320,5 @@ protected:
             print_tree(output, node->m_left, indent + 15);
         }
     }
-
-    /**
-     * @brief Overload of the insertion operator to print the BST to an output stream.
-     */
-    friend std::ostream& operator<<(std::ostream& output, BST& bst){
-        bst.print_tree(output, bst.m_root, 0);
-        return output;
-    }
-
 };
 #endif //ASSIGNMENT_3_BST_H

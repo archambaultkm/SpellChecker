@@ -11,8 +11,11 @@
 #include <sstream>
 #include <iostream>
 
-Dictionary::Dictionary(const std::string& file_name, SearchTreeBase<std::string>* tree_ptr) : m_tree(tree_ptr) {
-    //start the timer
+Dictionary::Dictionary(const std::string& file_name, SearchTreeBase<std::string>* tree_ptr) {
+    // deep copy the passed tree pointer
+    m_tree = tree_ptr->clone();
+
+    // start the timer
     m_timer.start();
 
     // Check what kind of tree m_tree points to and build the dictionary tree accordingly
@@ -49,6 +52,19 @@ Dictionary::Dictionary(const std::string& file_name, SearchTreeBase<std::string>
 
     // stop the timer
     m_timer.stop();
+}
+
+Dictionary Dictionary::build_and_save(const std::string& dictionary_path, const std::string& tree_output_path) {
+    BST<std::string> tree;
+    Dictionary dictionary(dictionary_path, &tree);
+
+    // see how long it took to build/ balance the dictionary
+    std::cout << "Dictionary built and balanced in " << dictionary.get_elapsed_time() << " ms." << std::endl;
+
+    // save tree to a file for review
+    dictionary.save_to_file(tree_output_path);
+
+    return dictionary;
 }
 
 bool Dictionary::find(std::string data) {

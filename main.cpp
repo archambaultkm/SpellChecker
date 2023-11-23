@@ -13,12 +13,13 @@
 
 using namespace std;
 
-const string EXPECTED_FORMAT = "\"./check ../tests/test.txt ../tests/dictionary.txt bst_output.txt\"";
+// expected program arguments, used as feedback to the user
+const string EXPECTED_FORMAT = "\"./check ../tests/sample_text.txt ../tests/dictionary.txt tree_output.txt\"";
 
 /**
- * @brief Check if the provided program arguments are valid.
+ * Validate program arguments
  *
- * @return True if arguments are valid, false otherwise.
+ * @return True if arguments provided are valid, false otherwise.
  */
 bool valid_arguments(int argc, int expected_num_args, char* argv[], const string& expected_format);
 
@@ -36,25 +37,20 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // initialize file paths from validated arguments
+    // for readability, initialize file paths from validated arguments
     string sample_text_path = argv[1];
     string dictionary_path = argv[2];
     string tree_output_path = argv[3];
 
-    // TODO type could be toggled with a command line flag?
-    // initialize dictionary and validate that it contains data
-    BST<std::string> tree;
-    Dictionary dictionary(dictionary_path, &tree);
+    // TODO allow a program argument to determine tree type
+    Dictionary dictionary = Dictionary::build_and_save(dictionary_path, tree_output_path);
+
+    // validate dictionary contains data, or else all spell checks will fail
     if (dictionary.is_empty()) {
         cerr << RED << "Error: the provided dictionary was empty. Check the file path and try again." << RESET << endl;
+
         return 1;
     }
-
-    // see how long it took to build/ balance the dictionary
-    cout << "Dictionary built and balanced in " << dictionary.get_elapsed_time() << " ms." << endl;
-
-    // save tree to a file for review
-    dictionary.save_to_file(tree_output_path);
 
     // Create and use a spell checker with the dictionary
     SpellChecker spell_checker(dictionary);
