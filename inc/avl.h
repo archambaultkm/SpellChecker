@@ -16,7 +16,7 @@
  * @class AVLNode
  * @brief Represents a node in the AVL tree.
  * @tparam T The type of data stored in the node.
- * @note Differs from BST node due to height factor
+ * @note Differs from base BST node due to height factor
  */
 template <class T>
 class AVLNode {
@@ -144,12 +144,12 @@ private:
         // get the balance factor of this node to see if it is unbalanced
         int balance = get_balance(node);
 
-        // Single left rotation: the right subtree is higher than the left
+        // Single right rotation: the left subtree is higher than the right
         if (balance > 1 && data < node->m_left->m_data) {
             return rotate_right(node);
         }
 
-        // Single right rotation: the left subtree is higher than the right
+        // Single left rotation: the right subtree is higher than the left
         if (balance < -1 && data > node->m_right->m_data) {
             return rotate_left(node);
         }

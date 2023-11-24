@@ -38,11 +38,11 @@ public:
      *
      * @param dictionary_path The path to the file containing dictionary data.
      * @param tree_output_path The path to save the binary search tree for review.
-     * @return A Dictionary object representing the built and balanced dictionary.
+     * @return A Dictionary object containing a built and balanced search tree.
      *
-     * @note The function prints the time taken to build and balance the dictionary using cout.
+     * @note Prints the time taken to build and balance the tree using cout.
      */
-    static Dictionary build_and_save(const std::string& dictionary_path, const std::string& tree_output_path);
+    static Dictionary build_and_save(const std::string& dictionary_path, const std::string& tree_output_path, const std::string& tree_type);
 
     /**
     * @brief Get the elapsed time for building the dictionary tree.

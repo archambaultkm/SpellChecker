@@ -54,9 +54,17 @@ Dictionary::Dictionary(const std::string& file_name, SearchTreeBase<std::string>
     m_timer.stop();
 }
 
-Dictionary Dictionary::build_and_save(const std::string& dictionary_path, const std::string& tree_output_path) {
-    BST<std::string> tree;
-    Dictionary dictionary(dictionary_path, &tree);
+Dictionary Dictionary::build_and_save(const std::string& dictionary_path, const std::string& tree_output_path, const std::string& tree_type) {
+
+    SearchTreeBase<std::string>* tree;
+    // use the appropriate tree
+    if (tree_type == "avl") {
+        tree = new AVL<std::string>;
+    } else {
+        tree = new BST<std::string>;
+    }
+
+    Dictionary dictionary(dictionary_path, *&tree);
 
     // see how long it took to build/ balance the dictionary
     std::cout << "Dictionary built and balanced in " << dictionary.get_elapsed_time() << " ms." << std::endl;

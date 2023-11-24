@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
     string tree_output_path = argv[3];
 
     // TODO allow a program argument to determine tree type
-    Dictionary dictionary = Dictionary::build_and_save(dictionary_path, tree_output_path);
+    Dictionary dictionary = Dictionary::build_and_save(dictionary_path, tree_output_path, "bst");
 
     // validate dictionary contains data, or else all spell checks will fail
     if (dictionary.is_empty()) {
@@ -69,8 +69,9 @@ bool valid_arguments(int argc, int expected_num_args, char* argv[], const string
     }
 
     // all program arguments are expected to be txt files
-    if (!is_valid_file_path(argv[1], "txt") || !is_valid_file_path(argv[2], "txt") || !is_valid_file_path(argv[3], "txt")) {
-        cerr << RED << "Must enter a valid .txt format file name for all provided files." << RESET << endl;
+    string extension = "txt";
+    if (!is_valid_file_path(argv[1], extension) || !is_valid_file_path(argv[2], extension) || !is_valid_file_path(argv[3], extension)) {
+        cerr << RED << "Must enter a valid " << "." << extension << " format file name for all provided files." << RESET << endl;
         cout << CYAN << "Arguments should resemble " << expected_format << RESET << endl;
 
         return false;
